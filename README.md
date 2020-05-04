@@ -39,3 +39,8 @@ Here you can override the those values like the MySQL/MariaDB connection URL.
 - Spring Boot
 - MyBatis
 - Spring Security
+- Swagger
+
+## License
+
+The project is under [Apache License 2.0](./LICENSE).

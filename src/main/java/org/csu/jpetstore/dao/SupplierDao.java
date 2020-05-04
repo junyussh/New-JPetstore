@@ -1,0 +1,22 @@
+package org.csu.jpetstore.dao;
+
+import org.apache.ibatis.annotations.*;
+import org.csu.jpetstore.bean.Supplier;
+
+import java.util.List;
+
+@Mapper
+public interface SupplierDao {
+    @Select("SELECT * FROM Supplier WHERE id=#{id}")
+    Supplier findSupplierByID(@Param("id") String id);
+
+    @Select("SELECT * FROM Supplier WHERE INSTR(name, #{value})")
+    List<Supplier> findSupplier(@Param("value") String value);
+
+    @Insert("INSERT INTO Supplier(id, userid, name, address1, address2, city, state, zip, phone) " +
+            "VALUES(#{id}, #{userid}, #{name}, #{address1}, #{address2}, #{city}, #{state}, #{zip}, #{phone})")
+    void insertSupplier(Supplier supplier);
+
+    @Delete("DELETE FROM Supplier WHERE id=#{id}")
+    void deleteSupplier(@Param("id") String id);
+}

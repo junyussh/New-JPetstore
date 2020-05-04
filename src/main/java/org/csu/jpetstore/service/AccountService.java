@@ -2,18 +2,20 @@ package org.csu.jpetstore.service;
 
 import org.csu.jpetstore.bean.Account;
 import org.csu.jpetstore.dao.AccountDao;
+import org.csu.jpetstore.util.IDGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class AccountService {
     @Autowired
     private AccountDao accountDao;
+    @Autowired
+    private IDGenerator idGenerator;
+    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     /**
@@ -25,6 +27,9 @@ public class AccountService {
         return accountDao.findAccountByID(id);
     }
 
+    public Account selectAccountByUsername(String username) {
+        return accountDao.findAccountByUsername(username);
+    }
     /**
      * Get all users
      * @return
@@ -38,12 +43,12 @@ public class AccountService {
      * @param account
      */
     public void insertAccount(Account account) {
-        String id;
+        Integer id;
         do {
-            id = String.format("%010d", new BigInteger(UUID.randomUUID().toString().replace("-", ""), 16)).substring(0, 8);
-        } while (this.selectAccountByID(id) != null);
-        Integer _id = Integer.valueOf(id);
-        account.setId(_id);
+            id = idGenerator.getID();
+        } while (this.selectAccountByID(id.toString()) != null);
+
+        account.setId(id);
         account.setPassword(bCryptPasswordEncoder.encode(account.getPassword()));
         account.setRole("USER");
         accountDao.insertAccount(account);

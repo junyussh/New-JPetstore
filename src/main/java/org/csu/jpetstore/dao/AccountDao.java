@@ -16,6 +16,9 @@ public interface AccountDao {
     @Select("select * from Account where id = #{ID}")
     Account findAccountByID(@Param("ID") String id);
 
+    @Select("select * from Account where username = #{username}")
+    Account findAccountByUsername(@Param("username") String username);
+
     @Select("SELECT * FROM Account")
     List<Account> findAllAccount();
 
@@ -33,5 +36,5 @@ public interface AccountDao {
     void updateAccountRole(@Param("id") String id, @Param("role") String role);
 
     @Delete("DELETE FROM Account WHERE id=#{id}")
-    void deleteAccount(String id);
+    void deleteAccount(@Param("id") String id);
 }
