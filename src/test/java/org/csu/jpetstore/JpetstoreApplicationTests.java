@@ -52,7 +52,6 @@ class JpetstoreApplicationTests {
         newAccount.setCity("Taipei");
         newAccount.setCountry("Taiwan");
         newAccount.setId(_id);
-        newAccount.setPassword("123456");
         newAccount.setUsername("test");
         newAccount.setPassword("admin");
         accountService.insertAccount(newAccount);
