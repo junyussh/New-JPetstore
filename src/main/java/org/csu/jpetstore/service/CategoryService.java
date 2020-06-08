@@ -54,10 +54,10 @@ public class CategoryService {
     /**
      * update name
      * @param name
-     * @param newName
+     * @param id
      */
-    public void updateCategoryName(String name,String newName){
-        categoryDao.updateCategory(name,newName);
+    public void updateCategoryName(String newName,String id){
+        categoryDao.updateCategory(newName,id);
     }
 
 }

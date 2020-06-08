@@ -27,12 +27,12 @@ public interface CategoryDao {
     void insertCategory(Category category);
 
     /**
-     * update Category a new name by old name
-     * @param name
+     * update Category a new name by id
      * @param newName
+     * @param id
      */
-    @Update("UPDATE Category SET name=#{newName} WHERE name=#{name}")
-    void updateCategory(@Param("name") String name ,@Param("newName") String newName);
+    @Update("UPDATE Category SET name=#{newName} WHERE id=#{id}")
+    void updateCategory(@Param("newName") String newName ,@Param("id") String id);
 
     /**
      * delete category by name

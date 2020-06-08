@@ -1,26 +1,40 @@
 package org.csu.jpetstore.bean;
 
+import io.swagger.models.auth.In;
+
 public class Product {
-    private String productId;
-    private String categoryId;
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    private Integer id;
+
+    public Integer getSupplierId() {
+        return supplierId;
+    }
+
+    public void setSupplierId(Integer supplierId) {
+        this.supplierId = supplierId;
+    }
+
+    private Integer supplierId;
+    private Integer categoryId;
     private String name;
     private String description;
     private String descriptionText;
     private String descriptionImage;
 
-    public String getProductId() {
-        return productId;
-    }
+    
 
-    public void setProductId(String productId) {
-        this.productId = productId;
-    }
-
-    public String getCategoryId() {
+    public Integer getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(String categoryId) {
+    public void setCategoryId(Integer categoryId) {
         this.categoryId = categoryId;
     }
 
