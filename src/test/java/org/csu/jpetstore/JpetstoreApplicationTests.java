@@ -1,8 +1,10 @@
 package org.csu.jpetstore;
 
 import org.csu.jpetstore.bean.Account;
+import org.csu.jpetstore.bean.Category;
 import org.csu.jpetstore.bean.Supplier;
 import org.csu.jpetstore.service.AccountService;
+import org.csu.jpetstore.service.CategoryService;
 import org.csu.jpetstore.service.SupplierService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,4 +106,33 @@ class JpetstoreApplicationTests {
         Supplier supplier = supplierService.selectSupplierByName("Test").get(0);
         supplierService.deleteSupplier(supplier.getId().toString());
     }
+
+
+    @Autowired
+    private CategoryService categoryService;
+
+    /**
+     * Test Category
+     */
+    @Test
+    void insertCategory(){
+        String id = String.format("%010d", new BigInteger(UUID.randomUUID().toString().replace("-", ""), 16)).substring(0, 8);
+        Integer _id = Integer.valueOf(id);
+        Category newCategory = new Category();
+        newCategory.setCategoryId(_id);
+        newCategory.setName("DOG");
+        categoryService.insertCategory(newCategory);
+    }
+
+    @Test
+    void deleteCategory(){
+        categoryService.deleteCategory("CAT");
+    }
+
+    @Test
+    void updateCategoryName(){
+        categoryService.updateCategoryName("DOG","myDOG");
+    }
+
+
 }
