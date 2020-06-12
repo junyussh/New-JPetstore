@@ -11,8 +11,4 @@ public class IDGenerator {
         String id = String.format("%010d", new BigInteger(UUID.randomUUID().toString().replace("-", ""), 16)).substring(0, 8);
         return Integer.valueOf(id);
     }
-    public String getIDString() {
-        String id = String.format("%010d", new BigInteger(UUID.randomUUID().toString().replace("-", ""), 16)).substring(0, 8);
-        return id;
-    }
 }

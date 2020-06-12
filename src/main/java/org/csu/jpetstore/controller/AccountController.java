@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/api/user")
 public class AccountController {
@@ -25,13 +27,13 @@ public class AccountController {
     private Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
     @ApiOperation(value = "Query user info" , authorizations = {@Authorization(value = "Bearer")})
-    @RequestMapping(method = RequestMethod.GET, value = "/")
+    @RequestMapping(method = RequestMethod.GET, value = "/me")
     public Account getUser(@ApiIgnore Authentication auth) {
         Account account = accountService.selectAccountByID(auth.getName());
         return account;
     }
 
-    @ApiOperation(value = "Query user info" , authorizations = {@Authorization(value = "Bearer")})
+    @ApiOperation(value = "Fetch user info by ID" , authorizations = {@Authorization(value = "Bearer")})
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Account getUserByID(@PathVariable String id) {
@@ -40,5 +42,11 @@ public class AccountController {
             throw new ApiRequestException("User id not exist", HttpStatus.NOT_FOUND);
         }
         return account;
+    }
+    @ApiOperation(value = "Get all user" , authorizations = {@Authorization(value = "Bearer")})
+    @RequestMapping(method = RequestMethod.GET, value = "/")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public List<Account> getAllUsers() {
+        return accountService.selectAllAccount();
     }
 }
