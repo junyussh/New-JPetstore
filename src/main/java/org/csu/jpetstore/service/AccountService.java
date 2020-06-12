@@ -50,6 +50,7 @@ public class AccountService {
 
         account.setId(id);
         account.setPassword(bCryptPasswordEncoder.encode(account.getPassword()));
+        account.setStatus(false);
         account.setRole("USER");
         accountDao.insertAccount(account);
     }

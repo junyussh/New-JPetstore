@@ -1,5 +1,7 @@
 package org.csu.jpetstore.controller;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import org.csu.jpetstore.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,13 +12,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/api")
+@RequestMapping(value = "/api/user")
 public class AccountController {
     @Autowired
     private AccountService accountService;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/v1/login")
-    public Map hello() {
+    @ApiOperation(value = "Query user info" , authorizations = {@Authorization(value = "Bearer")})
+    @RequestMapping(method = RequestMethod.GET, value = "/")
+    public Map getUser() {
         Map map = new HashMap();
         map.put("say", "hello");
         return map;

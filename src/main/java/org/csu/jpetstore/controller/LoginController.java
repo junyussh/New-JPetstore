@@ -3,6 +3,7 @@ package org.csu.jpetstore.controller;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.csu.jpetstore.bean.Account;
 import org.csu.jpetstore.exception.ApiRequestException;
 import org.csu.jpetstore.service.AccountService;
 import org.csu.jpetstore.service.MyUserDetailsService;
@@ -22,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@RequestMapping(value = "/api")
 public class LoginController {
     @Autowired
     private AccountService accountService;
@@ -66,5 +68,10 @@ public class LoginController {
         data.put("username", username);
         data.put("message", "Login success");
         return data;
+    }
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public Account register(@RequestBody Account param) {
+        accountService.insertAccount(param);
+        return param;
     }
 }

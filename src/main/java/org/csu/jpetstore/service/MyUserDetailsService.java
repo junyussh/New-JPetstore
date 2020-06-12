@@ -14,7 +14,7 @@ public class MyUserDetailsService implements UserDetailsService {
     private AccountService accountService;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Account account = accountService.selectAccountByUsername(username);
+        Account account = accountService.selectAccountByID(username);
         UserDetails userDetails = User.builder()
                 .username(account.getId().toString())
                 .password(account.getPassword())
