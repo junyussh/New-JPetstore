@@ -71,7 +71,7 @@ public class Account {
         this.username = username;
     }
 
-    @JsonIgnore
+//    @JsonIgnore
     public String getPassword() {
         return password;
     }
