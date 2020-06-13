@@ -22,8 +22,8 @@ public interface AccountDao {
     @Select("SELECT * FROM Account")
     List<Account> findAllAccount();
 
-    @Insert("INSERT into Account (id, username, password, email, firstName, lastName, status, address1, address2, city, state, zip, country, phone) " +
-            "VALUES(#{id}, #{username}, #{password}, #{email}, #{firstName}, #{lastName}, #{status}, #{address1},  #{address2}, #{city}, #{state}, #{zip}, #{country}, #{phone})")
+    @Insert("INSERT into Account (id, username, password, email, firstName, lastName, status, address1, address2, city, state, zip, country, phone ,role) " +
+            "VALUES(#{id}, #{username}, #{password}, #{email}, #{firstName}, #{lastName}, #{status}, #{address1},  #{address2}, #{city}, #{state}, #{zip}, #{country}, #{phone} ,#{role})")
     void insertAccount(Account account);
 
     @Update("UPDATE Account SET username=#{username}, password=#{password}, email=#{email}, firstName=#{firstName}, lastName=#{lastName}, address1=#{address1}, address2=#{address2}, city=#{city}, state=#{state}, zip=#{zip}, country=#{country}, phone=#{phone} WHERE id=#{id}")
