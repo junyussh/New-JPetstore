@@ -69,6 +69,7 @@ public class LoginController {
         data.put("message", "Login success");
         return data;
     }
+
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public Account register(@RequestBody Account param) {
         accountService.insertAccount(param);
