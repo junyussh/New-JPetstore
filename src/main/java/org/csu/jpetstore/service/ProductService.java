@@ -7,6 +7,8 @@ import org.csu.jpetstore.util.IDGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProductService {
     @Autowired
@@ -23,6 +25,10 @@ public class ProductService {
 
     public Product selectProductByName(String name){
         return productDao.findProductByName(name);
+    }
+
+    public List<Product> getProductListBySupplierId(String supplierId){
+        return productDao.getProductListBySupplierId(supplierId);
     }
 
     /**

@@ -41,6 +41,7 @@ class JpetstoreApplicationTests {
         Account account = accountService.selectAccountByID("30266518");
         System.out.println(account.getUsername());
     }
+
     @Test
     void insertAccount() {
         String id = String.format("%010d", new BigInteger(UUID.randomUUID().toString().replace("-", ""), 16)).substring(0, 8);
@@ -56,11 +57,13 @@ class JpetstoreApplicationTests {
         newAccount.setPassword("admin");
         accountService.insertAccount(newAccount);
     }
+
     @Test
     void updateUserStatus() {
         Account account = accountService.selectAccountByUsername("test");
         accountService.updateAccountStatus(account.getId().toString(), true);
     }
+
     @Test
     void updateUserInfo() {
         Account account = accountService.selectAccountByUsername("test");
@@ -68,11 +71,13 @@ class JpetstoreApplicationTests {
         account.setAddress2("Taipei1");
         accountService.updateAccountInfo(account);
     }
+
     @Test
     void updateUserRole() {
         Account account = accountService.selectAccountByUsername("test");
         accountService.updateAccountRole(account.getId().toString(), "ADMIN");
     }
+
     @Test
     void deleteUser() {
         Account account = accountService.selectAccountByUsername("test");
@@ -96,19 +101,6 @@ class JpetstoreApplicationTests {
         supplier.setPhone("0987987487");
         supplierService.insertSupplier(supplier);
     }
-    @Test
-    void findSupplierByName() {
-        List<Supplier> suppliers = supplierService.selectSupplierByName("test");
-        Supplier supplier = suppliers.get(0);
-        System.out.println(supplier.getName());
-    }
-    @Test
-    void deleteSupplier() {
-        Supplier supplier = supplierService.selectSupplierByName("Test").get(0);
-        supplierService.deleteSupplier(supplier.getId().toString());
-    }
-
-
 
 
     /**
@@ -116,8 +108,9 @@ class JpetstoreApplicationTests {
      */
     @Autowired
     private CategoryService categoryService;
+
     @Test
-    void insertCategory(){
+    void insertCategory() {
         String id = String.format("%010d", new BigInteger(UUID.randomUUID().toString().replace("-", ""), 16)).substring(0, 8);
         Integer _id = Integer.valueOf(id);
         Category newCategory = new Category();
@@ -127,13 +120,13 @@ class JpetstoreApplicationTests {
     }
 
     @Test
-    void deleteCategory(){
+    void deleteCategory() {
         categoryService.deleteCategory("CAT");
     }
 
     @Test
-    void updateCategoryName(){
-        categoryService.updateCategoryName("DOG","10105209");
+    void updateCategoryName() {
+        categoryService.updateCategoryName("DOG", "10105209");
     }
 
     /**
@@ -141,8 +134,9 @@ class JpetstoreApplicationTests {
      */
     @Autowired
     private ProductService productService;
+
     @Test
-    void insertProdcut(){
+    void insertProdcut() {
         // get test categoryid = 10105209 supplierId = 12525421
         String id = String.format("%010d", new BigInteger(UUID.randomUUID().toString().replace("-", ""), 16)).substring(0, 8);
         Integer _id = Integer.valueOf(id);
@@ -155,16 +149,31 @@ class JpetstoreApplicationTests {
     }
 
     @Test
-    void deleteProduct(){
+    void deleteProduct() {
         productService.deleteProduct(String.valueOf(64174746)); // already deleted
     }
 
     @Test
-    void updateProduct(){
+    void updateProduct() {
         Product product = productService.selectProductByName("BigDog");
         product.setName("BigStrongDog");
         productService.updateProduct(product);
     }
 
 
+    @Test
+    void testGetProductListBySupplierId() {
+        List<Product> productList = productService.getProductListBySupplierId("15509524");
+        for (Product i : productList) {
+            System.out.println(i.getId()+"  "+i.getSupplierId()+"  "+i.getCategoryId());
+        }
+    }
+
+    @Test
+    void testGetSupplierListByUserId(){
+        List<Supplier> supplierList =  supplierService.selectSupplierByUserId("30266518");
+        for (Supplier i : supplierList) {
+            System.out.println(i.getId()+"  "+i.getUserid()+"  "+i.getName());
+        }
+    }
 }

@@ -10,7 +10,7 @@ public interface SupplierDao {
     @Select("SELECT * FROM Supplier WHERE id=#{id}")
     Supplier findSupplierByID(@Param("id") String id);
 
-    @Select("SELECT * FROM Supplier WHERE INSTR(name, #{value})")
+    @Select("SELECT * FROM Supplier WHERE INSTR(userId, #{value})")
     List<Supplier> findSupplier(@Param("value") String value);
 
     @Insert("INSERT INTO Supplier(id, userid, name, address1, address2, city, state, zip, phone) " +

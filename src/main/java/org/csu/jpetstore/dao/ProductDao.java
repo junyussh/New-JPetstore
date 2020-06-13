@@ -35,4 +35,7 @@ public interface ProductDao {
     @Update("UPDATE Product SET supplierId=#{supplierId}, categoryId=#{categoryId}, name=#{name} WHERE id=#{id}")
     void updateProductInfo(Product product);
 
+    @Select("select * from Product where supplierId=#{id}")
+    List<Product> getProductListBySupplierId(@Param("id") String id);
+
 }

@@ -33,6 +33,7 @@ public class AccountController {
         return account;
     }
 
+
     @ApiOperation(value = "Fetch user info by ID" , authorizations = {@Authorization(value = "Bearer")})
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")

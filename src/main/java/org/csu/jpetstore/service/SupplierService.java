@@ -18,7 +18,7 @@ public class SupplierService {
     public Supplier selectSupplierByID(String id) {
         return supplierDao.findSupplierByID(id);
     }
-    public List<Supplier> selectSupplierByName(String value) {
+    public List<Supplier> selectSupplierByUserId(String value) {
         return supplierDao.findSupplier(value);
     }
     public void insertSupplier(Supplier supplier) {
