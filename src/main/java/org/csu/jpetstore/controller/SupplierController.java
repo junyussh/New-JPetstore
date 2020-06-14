@@ -23,10 +23,11 @@ public class SupplierController {
 
     /**
      * 获取当前用户的所有店铺
+     *
      * @param auth
      * @return
      */
-    @ApiOperation(value = "Query all suppliers of current user" , authorizations = {@Authorization(value = "Bearer")})
+    @ApiOperation(value = "Query all suppliers of current user", authorizations = {@Authorization(value = "Bearer")})
     @RequestMapping(method = RequestMethod.GET, value = "/")
     public List<Supplier> getSupplierListByUserId(@ApiIgnore Authentication auth) {
         return supplierService.selectSupplierByUserId(auth.getName());
@@ -35,16 +36,12 @@ public class SupplierController {
 
     /**
      * 删除店铺
+     *
      * @param supplierid
      */
-    @ApiOperation(value = "Delete supplier" , authorizations = {@Authorization(value = "Bearer")})
+    @ApiOperation(value = "Delete supplier", authorizations = {@Authorization(value = "Bearer")})
     @RequestMapping(method = RequestMethod.GET, value = "/{supplierid}")
-    public void deleteSupplier(@PathVariable String supplierid){
+    public void deleteSupplier(@PathVariable String supplierid) {
         supplierService.deleteSupplier(supplierid);
     }
-
-
-
-
-
 }
