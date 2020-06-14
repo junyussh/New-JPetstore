@@ -40,7 +40,7 @@ public class SupplierController {
      * @param supplierid
      */
     @ApiOperation(value = "Delete supplier", authorizations = {@Authorization(value = "Bearer")})
-    @RequestMapping(method = RequestMethod.GET, value = "/{supplierid}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{supplierid}")
     public void deleteSupplier(@PathVariable String supplierid) {
         supplierService.deleteSupplier(supplierid);
     }
