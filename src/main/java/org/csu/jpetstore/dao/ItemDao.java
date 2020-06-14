@@ -1,10 +1,8 @@
 package org.csu.jpetstore.dao;
 
 import org.apache.ibatis.annotations.*;
-import org.csu.jpetstore.bean.Account;
 import org.csu.jpetstore.bean.Item;
 import org.mapstruct.Mapper;
-import org.omg.CORBA.INTERNAL;
 
 import java.util.List;
 
@@ -12,25 +10,28 @@ import java.util.List;
 public interface ItemDao {
 
 
-    @Insert("INSERT into item (id, productId, supplierId, uniprice, unicost, quantity, attribute) " +
-            "VALUES(#{id}, #{productid}, #{supplierid}, #{uniprice}, #{unicost}, #{quantity}, #{attribute})")
+    @Insert("INSERT into Item (id, productId, supplierId, unitprice, unitcost, quantity, attribute) " +
+            "VALUES(#{id}, #{productId}, #{supplierId}, #{unitprice}, #{unitcost}, #{quantity}, #{attribute})")
     void insertItem(Item item);
 
-    @Update("UPDATE Item SET supplierId=#{supplier}, productId=#{product}, quantity=#{quantity}, uniprice=#{uniprice}, unicost=#{unicost}, attribute=#{attribute}")
-    void updateItemInfo(Item item);
+    @Update("UPDATE Item SET quantity=#{quantity}, unitprice=#{unitprice}, unitcost=#{unitcost}, attribute=#{attribute}")
+    void updateItem(Item item);
 
     @Select("select * from Item where productId = #{productid}")
-    List<Item> findItemByProductid(@Param("productid") String productid);
+    List<Item> findItemByProductId(@Param("productid") String productid);
 
     @Select("select * from Item where supplierId = #{supplierid}")
     List<Item> findItemBySuppplierid(@Param("supplierid")  int supplierid);
+
+    @Select("select * from Item")
+    List<Item> selectAllItems();
 
     @Delete("DELETE FROM Item WHERE id=#{id}")
     void deleteItem(@Param("id") String id);
 
 
     @Select("select * from Item where id = #{id}")
-    List<Item> findItemById(@Param("id") String id);
+    Item findItemById(@Param("id") String id);
 
 }
 

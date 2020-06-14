@@ -57,6 +57,7 @@ public class ProductController {
     public Product getProductByID(@PathVariable String productId) {
         return productService.selectProductByID(productId);
     }
+
     /**
      * 获取当前用户的所有product,包括所有商铺 (查询当前用户的所有商品)
      *
@@ -87,7 +88,7 @@ public class ProductController {
     }
 
     /**
-     * 添加新的 product
+     * Create new product
      *
      * @param auth
      * @param product

@@ -1,77 +1,73 @@
 package org.csu.jpetstore.bean;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-
 public class Item {
-    private String id;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    private int supplierid;
-    private String productid;
-    private int quantity;
-    private int uniprice;
-    private int unicost;
+    private Integer id;
+    private Integer supplierId;
+    private Integer productId;
+    private Integer quantity;
+    private Float unitprice;
+    private Float unitcost;
     private String attribute;
 
-    public Item(){
+    public Item() {
     }
 
-    public Item(String id, int supplierid, String productid, int uniprice, int unicost, int quantity, String attribute){
+    public Item(Integer id, Integer supplierId, Integer productId, Integer quantity, Float unitprice, Float unitcost, String attribute) {
         this.id = id;
-        this.supplierid = supplierid;
-        this.productid = productid;
+        this.supplierId = supplierId;
+        this.productId = productId;
         this.quantity = quantity;
-        this.uniprice = uniprice;
-        this.unicost = unicost;
+        this.unitprice = unitprice;
+        this.unitcost = unitcost;
         this.attribute = attribute;
     }
 
-    public int getSupplierid() {
-        return supplierid;
+    public Integer getId() {
+        return id;
     }
 
-    public void setSupplierid(int supplierid) {
-        this.supplierid = supplierid;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public String getProductid() {
-        return productid;
+    public Integer getSupplierId() {
+        return supplierId;
     }
 
-    public void setProductid(String productid) {
-        this.productid = productid;
+    public void setSupplierId(Integer supplierId) {
+        this.supplierId = supplierId;
     }
 
-    public int getQuantity() {
+    public Integer getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Integer productId) {
+        this.productId = productId;
+    }
+
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 
-    public int getUniprice() {
-        return uniprice;
+    public Float getUnitprice() {
+        return unitprice;
     }
 
-    public void setUniprice(int uniprice) {
-        this.uniprice = uniprice;
+    public void setUnitprice(Float unitprice) {
+        this.unitprice = unitprice;
     }
 
-    public int getUnicost() {
-        return unicost;
+    public Float getUnitcost() {
+        return unitcost;
     }
 
-    public void setUnicost(int unicost) {
-        this.unicost = unicost;
+    public void setUnitcost(Float unitcost) {
+        this.unitcost = unitcost;
     }
 
     public String getAttribute() {
