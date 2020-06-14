@@ -1,6 +1,7 @@
 package org.csu.jpetstore.bean;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 
 public class Item {
     private String id;
@@ -13,8 +14,8 @@ public class Item {
         this.id = id;
     }
 
-    private String supplier;
-    private String product;
+    private int supplierid;
+    private String productid;
     private int quantity;
     private int uniprice;
     private int unicost;
@@ -23,30 +24,30 @@ public class Item {
     public Item(){
     }
 
-    public Item(String id, String suppplier, String product, int quantity, int unitprice, int unitcost, String attribute){
+    public Item(String id, int supplierid, String productid, int uniprice, int unicost, int quantity, String attribute){
         this.id = id;
-        this.supplier = suppplier;
-        this.product = product;
+        this.supplierid = supplierid;
+        this.productid = productid;
         this.quantity = quantity;
-        this.uniprice = unitprice;
-        this.unicost = unitcost;
+        this.uniprice = uniprice;
+        this.unicost = unicost;
         this.attribute = attribute;
     }
 
-    public String getSuppplier() {
-        return supplier;
+    public int getSupplierid() {
+        return supplierid;
     }
 
-    public void setSuppplier(String suppplier) {
-        this.supplier = suppplier;
+    public void setSupplierid(int supplierid) {
+        this.supplierid = supplierid;
     }
 
-    public String getProduct() {
-        return product;
+    public String getProductid() {
+        return productid;
     }
 
-    public void setProduct(String product) {
-        this.product = product;
+    public void setProductid(String productid) {
+        this.productid = productid;
     }
 
     public int getQuantity() {
@@ -57,20 +58,20 @@ public class Item {
         this.quantity = quantity;
     }
 
-    public int getUnitprice() {
+    public int getUniprice() {
         return uniprice;
     }
 
-    public void setUnitprice(int unitprice) {
-        this.uniprice = unitprice;
+    public void setUniprice(int uniprice) {
+        this.uniprice = uniprice;
     }
 
-    public int getUnitcost() {
+    public int getUnicost() {
         return unicost;
     }
 
-    public void setUnitcost(int unitcost) {
-        this.unicost = unitcost;
+    public void setUnicost(int unicost) {
+        this.unicost = unicost;
     }
 
     public String getAttribute() {
@@ -80,5 +81,4 @@ public class Item {
     public void setAttribute(String attribute) {
         this.attribute = attribute;
     }
-
 }

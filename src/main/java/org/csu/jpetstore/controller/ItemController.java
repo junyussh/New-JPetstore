@@ -48,11 +48,13 @@ public class ItemController {
     public Map updateItem(@ApiIgnore Authentication auth, @RequestBody Item item, @PathVariable String id){
         String userid = auth.getName();
         Item item1 = itemService.findItemById(id).get(0);
+        Integer supplier1 =  item.getSupplierid();
+        String supid = supplier1.toString();
         //检测item id是否存在
         //通过supplier也就是supplierid去supplierservice里去查找userid来判断当前用户是否有修改item的资格
         if (item1 == null) {
             throw new ApiRequestException("Item not exist!", HttpStatus.BAD_REQUEST);
-        }else if (!supplierService.selectSupplierByID(item.getSuppplier()).equals(userid)) {
+        }else if (!supplierService.selectSupplierByID(supid).equals(userid)) {
             throw new ApiRequestException("You don't have permission to operate.");
         }
         itemService.updateItemInfo(item);
@@ -74,7 +76,7 @@ public class ItemController {
     /**findItemBySuppplierid*/
     @ApiOperation(value = "find item by supplierid", authorizations = {@Authorization(value = "Bearer")})
     @RequestMapping(method = RequestMethod.GET, value = "/{suppplierid}")
-    public List<Item> findItemBySuppplierid(@PathVariable String suppplierid) {
+    public List<Item> findItemBySuppplierid(@PathVariable int suppplierid) {
         return itemService.findItemBySuppplierid(suppplierid);
     }
 

@@ -21,12 +21,12 @@ public class ItemService {
         itemDao.updateItemInfo(item);
     }
 
-    public List<Item> findItemByProductid(String product){
-        return itemDao.findItemByProductid(product);
+    public List<Item> findItemByProductid(String productid){
+        return itemDao.findItemByProductid(productid);
     }
 
-    public List<Item> findItemBySuppplierid(String suppplier){
-        return itemDao.findItemBySuppplierid(suppplier);
+    public List<Item> findItemBySuppplierid(int supplierid){
+        return itemDao.findItemBySuppplierid(supplierid);
     }
 
     public void deleteItem(String id){
