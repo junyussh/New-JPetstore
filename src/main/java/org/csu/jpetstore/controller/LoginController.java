@@ -66,9 +66,16 @@ public class LoginController {
         data.put("id", userDetails.getUsername());
         data.put("username", username);
         data.put("message", "Login success");
+        data.put("error", false);
         return data;
     }
 
+    /**
+     * Register
+     * @param param
+     * @return
+     */
+    @ApiOperation("Register")
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public Account register(@RequestBody Account param) {
         accountService.insertAccount(param);

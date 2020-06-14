@@ -23,6 +23,9 @@ public class SupplierService {
         return supplierDao.findSupplier(userid);
     }
 
+    public void updateSupplier(Supplier supplier) {
+        supplierDao.updateSupplier(supplier);
+    }
     public void insertSupplier(Supplier supplier) {
         Integer id;
         do {

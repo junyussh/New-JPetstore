@@ -29,6 +29,7 @@ public class SupplierController {
      */
     @ApiOperation(value = "Query all suppliers of current user", authorizations = {@Authorization(value = "Bearer")})
     @RequestMapping(method = RequestMethod.GET, value = "/")
+    @PreAuthorize("isAuthenticated() and hasRole('SELLER')")
     public List<Supplier> getSupplierListByUserId(@ApiIgnore Authentication auth) {
         return supplierService.selectSupplierByUserId(auth.getName());
     }
