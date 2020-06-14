@@ -2,10 +2,15 @@ package org.csu.jpetstore.service;
 
 import org.csu.jpetstore.bean.Category;
 import org.csu.jpetstore.dao.CategoryDao;
+import org.csu.jpetstore.exception.ApiRequestException;
 import org.csu.jpetstore.util.IDGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class CategoryService {
@@ -34,14 +39,22 @@ public class CategoryService {
      *
      * @param category
      */
-    public void insertCategory(Category category) {
+    public Map insertCategory(Category category) {
         Integer id;
         do {
             id = idGenerator.getID();
         } while (this.selectCategoryByID(id.toString()) != null);
+        if (categoryDao.findCategoryByName(category.getName()) != null){
+            throw new ApiRequestException("Supplier not exist!", HttpStatus.BAD_REQUEST);
+        }
         category.setCategoryId(id);
-        category.setName(category.getName());
         categoryDao.insertCategory(category);
+        Map data = new HashMap();
+        data.put("error", false);
+        data.put("message", "Insert category success.");
+        data.put("id", category.getCategoryId());
+        data.put("data", category);
+        return data;
     }
 
     /**
@@ -55,8 +68,7 @@ public class CategoryService {
 
     /**
      * update name
-     *
-     * @param name
+     * @param newName
      * @param id
      */
     public void updateCategoryName(String newName, String id) {
