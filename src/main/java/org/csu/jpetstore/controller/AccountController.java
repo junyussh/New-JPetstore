@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/api/user")
+@RequestMapping(value = "/api/users")
 public class AccountController {
     @Autowired
     private AccountService accountService;
@@ -71,9 +71,9 @@ public class AccountController {
      * @return
      */
     @ApiOperation(value = "Get account by specific role", authorizations = {@Authorization(value = "Bearer")})
-    @RequestMapping(method = RequestMethod.GET, value = "/getAccountByRole")
+    @RequestMapping(method = RequestMethod.GET, value = "/{role}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public List<Account> getAccountByRole(@RequestParam String role) {
+    public List<Account> getAccountByRole(@PathVariable String role) {
         return accountService.selectAccountByRole(role);
     }
 
@@ -97,6 +97,4 @@ public class AccountController {
         data.put("error", false);
         return data;
     }
-
-
 }

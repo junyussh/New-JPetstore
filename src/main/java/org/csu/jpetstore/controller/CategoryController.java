@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/api/category")
+@RequestMapping(value = "/api/categorys")
 public class CategoryController {
     @Autowired
     private CategoryService categoryService;
@@ -32,7 +32,7 @@ public class CategoryController {
 
     /**Add new category*/
     @ApiOperation(value = "Add category" , authorizations = {@Authorization(value = "Bearer")})
-    @RequestMapping(value = "/addCategory", method = RequestMethod.POST)
+    @RequestMapping(value = "/", method = RequestMethod.POST)
     public void addCategory(@ApiIgnore Authentication auth, @RequestBody Category category) {
         // 首先判断是用户是否为seller
 //        if (accountService.selectAccountByID(auth.getName()).getRole().equals("SELLER")){
