@@ -25,7 +25,7 @@ public interface ProductDao {
     @Select("SELECT * FROM Product where categoryId = #{id}")
     List<Product> findAllProductByCategoryId(@Param("id") String id);
 
-    @Insert("INSERT into Product (id, supplierId, categoryId, name) VALUES(#{id}, #{supplierId}, ${categoryId}, #{name})")
+    @Insert("INSERT into Product (id, supplierId, categoryId, name, description, image) VALUES(#{id}, #{supplierId}, ${categoryId}, #{name}, #{description}, #{image})")
     void insertProduct(Product product);
 
     @Delete("DELETE FROM Product WHERE id=#{id}")
@@ -35,7 +35,7 @@ public interface ProductDao {
      * update info
      * @param product
      */
-    @Update("UPDATE Product SET supplierId=#{supplierId}, categoryId=#{categoryId}, name=#{name} WHERE id=#{id}")
+    @Update("UPDATE Product SET supplierId=#{supplierId}, categoryId=#{categoryId}, name=#{name}, description=#{description}, image=#{image} WHERE id=#{id}")
     void updateProductInfo(Product product);
 
     @Select("select * from Product where supplierId=#{id}")

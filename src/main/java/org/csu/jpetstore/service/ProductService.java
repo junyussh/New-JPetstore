@@ -44,9 +44,6 @@ public class ProductService {
             id = idGenerator.getID();
         } while (this.selectProductByID(id.toString()) != null);
         product.setId(id);
-        product.setSupplierId(product.getSupplierId());
-        product.setCategoryId(product.getCategoryId());
-        product.setName(product.getName());
         productDao.insertProduct(product);
     }
 

@@ -2,7 +2,6 @@ package org.csu.jpetstore.controller;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
-import org.csu.jpetstore.bean.Account;
 import org.csu.jpetstore.bean.Product;
 import org.csu.jpetstore.bean.Supplier;
 import org.csu.jpetstore.exception.ApiRequestException;
@@ -23,7 +22,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping(value = "/api/products")
+@RequestMapping(value = "/api/product")
 public class ProductController {
 
     @Autowired
@@ -39,15 +38,25 @@ public class ProductController {
     /**
      * 获取当前用户的某一个supplier的所有product (查询当前商铺的所有商品)
      *
-     * @param supplierid
+     * @param supplierId
      * @return
      */
-    @ApiOperation(value = "Query all product of current [supplier]", authorizations = {@Authorization(value = "Bearer")})
-    @RequestMapping(method = RequestMethod.GET, value = "/all?supplier={supplierid}")
-    public List<Product> getProductList(@RequestParam String supplierid) {
-        return productService.getProductListBySupplierId(supplierid);
+    @ApiOperation(value = "Query all product of current [supplier]")
+    @RequestMapping(method = RequestMethod.GET, value = "/all?supplier={supplierId}")
+    public List<Product> getProductList(@RequestParam String supplierId) {
+        return productService.getProductListBySupplierId(supplierId);
     }
 
+    /**
+     * Query product by ID
+     * @param productId
+     * @return
+     */
+    @ApiOperation(value = "Query product by ID")
+    @RequestMapping(method = RequestMethod.GET, value = "/{productId}")
+    public Product getProductByID(@PathVariable String productId) {
+        return productService.selectProductByID(productId);
+    }
     /**
      * 获取当前用户的所有product,包括所有商铺 (查询当前用户的所有商品)
      *
@@ -55,7 +64,8 @@ public class ProductController {
      * @return
      */
     @ApiOperation(value = "Query all product of current [user]", authorizations = {@Authorization(value = "Bearer")})
-    @RequestMapping(method = RequestMethod.GET, value = "/userAll")
+    @RequestMapping(method = RequestMethod.GET, value = "/")
+    @PreAuthorize("isAuthenticated() and hasRole('SELLER')")
     public List<Product> getUserAllProduct(@ApiIgnore Authentication auth) {
         List<Supplier> suppliersList = supplierService.selectSupplierByUserId(auth.getName());
         List<Product> allProductList = new ArrayList<>();
@@ -70,16 +80,10 @@ public class ProductController {
      *
      * @return
      */
-    @ApiOperation(value = "Query all product of current [platform]", authorizations = {@Authorization(value = "Bearer")})
+    @ApiOperation(value = "Query all product in database")
     @RequestMapping(method = RequestMethod.GET, value = "/all")
-    public List<Product> getPlatformAllProduct() {
-        List<Product> allProductList = new ArrayList<>();
-        for (Account account : accountService.selectAllAccount()) {
-            for (Supplier supplier : supplierService.selectSupplierByUserId(String.valueOf(account.getId()))) {
-                allProductList.addAll(productService.getProductListBySupplierId(String.valueOf(supplier.getId())));
-            }
-        }
-        return allProductList;
+    public List<Product> getAllProducts() {
+        return productService.selectAllProducts();
     }
 
     /**
@@ -88,12 +92,12 @@ public class ProductController {
      * @param auth
      * @param product
      */
-    @ApiOperation(value = "Add new product", authorizations = {@Authorization(value = "Bearer")})
+    @ApiOperation(value = "Add a new product", authorizations = {@Authorization(value = "Bearer")})
     @RequestMapping(value = "/", method = RequestMethod.POST)
     @PreAuthorize("isAuthenticated() and hasRole('SELLER')")
-    public void addProduct(@ApiIgnore Authentication auth, @RequestBody Product product) {
+    public Product addProduct(@ApiIgnore Authentication auth, @RequestBody Product product) {
         // if supplier belongs to current user
-        String supplierId = product.getId().toString();
+        String supplierId = product.getSupplierId().toString();
         Supplier supplier = supplierService.selectSupplierByID(supplierId);
         if (supplier == null) {
             throw new ApiRequestException("Supplier not exist", HttpStatus.BAD_REQUEST);
@@ -101,6 +105,7 @@ public class ProductController {
             throw new ApiRequestException("You don't have permission to operate.");
         }
         productService.insertProduct(product);
+        return product;
     }
 
 
@@ -111,34 +116,33 @@ public class ProductController {
      * @param product
      */
     @ApiOperation(value = "Update product info", authorizations = {@Authorization(value = "Bearer")})
-    @RequestMapping(value = "/{productid}", method = RequestMethod.PUT)
-    public Map updateProduct(@ApiIgnore Authentication auth, @RequestBody Product product, @RequestParam String productid) {
-        System.out.println(product.getId());
-        product.setId(Integer.valueOf(productid));
-        // 判断这个商品是否为当前用户的售卖范围：获取他的所有商铺是否包含商品所在的店铺
-        boolean flag = true;
-        List<Supplier> supplierList = supplierService.selectSupplierByUserId(auth.getName());
-        for (Supplier supplier : supplierList) {
-            for (Product product1 : productService.getProductListBySupplierId(String.valueOf(supplier.getId()))) {
-                if (product1.getId().equals(product.getId())) {
-                    productService.updateProduct(product);
-                    flag = false;
-                }
+    @RequestMapping(value = "/{productId}", method = RequestMethod.PUT)
+    @PreAuthorize("isAuthenticated() and hasRole('SELLER')")
+    public Map updateProduct(@ApiIgnore Authentication auth, @RequestBody Product product, @RequestParam String productId) {
+        product.setId(Integer.valueOf(productId));
+        // target supplierId
+        String supplierId = product.getSupplierId().toString();
+        Product product1 = productService.selectProductByID(productId);
+        if (product1 == null) {
+            throw new ApiRequestException("Product not exist!", HttpStatus.BAD_REQUEST);
+        } else {
+            Supplier old_supplier = supplierService.selectSupplierByID(product1.getSupplierId().toString());
+            if (!old_supplier.getUserid().toString().equals(auth.getName())) {
+                throw new ApiRequestException("You don't own this product", HttpStatus.FORBIDDEN);
+            }
+            Supplier supplier = supplierService.selectSupplierByID(supplierId);
+            if (supplier == null) {
+                throw new ApiRequestException("Supplier not exist!", HttpStatus.BAD_REQUEST);
+            }
+            else if (!supplier.getUserid().toString().equals(auth.getName())) {
+                throw new ApiRequestException("You can't change the ownership of the product to other person's supplier!", HttpStatus.FORBIDDEN);
             }
         }
-//        if (supplierService.selectSupplierByUserId(auth.getName()).contains(supplierService.selectSupplierByID(String.valueOf(productService.selectProductByID(String.valueOf(product.getId())).getSupplierId())))){
-//            System.out.println("is in");
-//            productService.updateProduct(product);
-//        }
-
-        if (flag) {
-            throw new ApiRequestException("Product update error", HttpStatus.BAD_REQUEST);
-        }
-        // exception handler
+        productService.updateProduct(product);
         Map data = new HashMap();
         data.put("error", false);
         data.put("message", "Supplier updated success.");
-        data.put("id", productid);
+        data.put("id", productId);
         data.put("data", product);
         return data;
     }
@@ -147,33 +151,28 @@ public class ProductController {
      * 删除product
      *
      * @param auth
-     * @param productid
+     * @param productId
      */
     @ApiOperation(value = "Delete product", authorizations = {@Authorization(value = "Bearer")})
-    @RequestMapping(value = "/{productid}", method = RequestMethod.DELETE)
-    public Map deleteProduct(@ApiIgnore Authentication auth, @PathVariable String productid) {
-        System.out.println(productid);
-        List<Supplier> supplierList = supplierService.selectSupplierByUserId(auth.getName());
-        for (Supplier supplier : supplierList) {
-            for (Product product1 : productService.getProductListBySupplierId(String.valueOf(supplier.getId()))) {
-                // String to integer
-                if (product1.getId().equals(Integer.valueOf(productid))) {
-//                    System.out.println("check");
-                    productService.deleteProduct(productid);
-                }
+    @RequestMapping(value = "/{productId}", method = RequestMethod.DELETE)
+    @PreAuthorize("isAuthenticated() and hasRole('SELLER')")
+    public Map deleteProduct(@ApiIgnore Authentication auth, @PathVariable String productId) {
+        Product product = productService.selectProductByID(productId);
+        // product id not exist
+        if (product == null) {
+            throw new ApiRequestException("Product not exist!", HttpStatus.BAD_REQUEST);
+        } else {
+            String supplierId = product.getSupplierId().toString();
+            // the user don't own this product
+            if (!supplierService.selectSupplierByID(supplierId).getUserid().toString().equals(auth.getName())) {
+                throw new ApiRequestException("You don't have permission to delete this product", HttpStatus.FORBIDDEN);
             }
         }
+        productService.deleteProduct(productId);
 
-//        productService.deleteProduct(productid);
-        // 判断这个商品是否为当前用户的售卖范围：获取他的所有商铺是否包含商品所在的店铺
-//        if (supplierService.selectSupplierByUserId(auth.getName()).contains(supplierService.selectSupplierByID(String.valueOf(productService.selectProductByID(productid).getSupplierId())))){
-//            productService.deleteProduct(productid);
-//        }
-
-        // exception handler
         Map data = new HashMap();
-        data.put("message", "Product has been deleted.");
-        data.put("id", productid);
+        data.put("message", "Product "+product.getName()+" has been deleted.");
+        data.put("id", productId);
         data.put("error", false);
         return data;
     }
