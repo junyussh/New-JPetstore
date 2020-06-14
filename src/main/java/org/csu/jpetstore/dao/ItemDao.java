@@ -11,18 +11,18 @@ import java.util.List;
 public interface ItemDao {
 
 
-    @Insert("INSERT into Item (id, suppplier, product, quantity, unitprice, unitcost, attribute) " +
-            "VALUES(#{id}, #{suppplier}, #{product}, #{quantity}, #{unitprice}, #{unitcost}, #{attribute})")
+    @Insert("INSERT into Item (id, productid, supplierid, uniprice, unicost, quantity, attribute) " +
+            "VALUES(#{id}, #{product}, #{supplier}, #{uniprice}, #{unicost}, #{quantity}, #{attribute})")
     void insertItem(Item item);
 
-    @Update("UPDATE Item SET suppplier=#{suppplier}, product=#{product}, quantity=#{quantity}, unitprice=#{unitprice}, unitcost=#{unitcost}, attribute=#{attribute}")
+    @Update("UPDATE Item SET supplierid=#{supplier}, productid=#{product}, quantity=#{quantity}, uniprice=#{uniprice}, unicost=#{unicost}, attribute=#{attribute}")
     void updateItemInfo(Item item);
 
-    @Select("select * from Item where product = #{productid}")
+    @Select("select * from Item where productid = #{productid}")
     List<Item> findItemByProductid(@Param("productid") String product);
 
-    @Select("select * from Item where suppplier = #{suppplierid}")
-    List<Item> findItemBySuppplierid(@Param("suppplierid") String suppplier);
+    @Select("select * from Item where supplierid = #{supplierid}")
+    List<Item> findItemBySuppplierid(@Param("supplierid") String suppplier);
 
     @Delete("DELETE FROM Item WHERE id=#{id}")
     void deleteItem(@Param("id") String id);

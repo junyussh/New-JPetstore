@@ -5,6 +5,7 @@ import io.swagger.annotations.Authorization;
 import org.csu.jpetstore.bean.Category;
 import org.csu.jpetstore.bean.Item;
 import org.csu.jpetstore.bean.Product;
+import org.csu.jpetstore.bean.Supplier;
 import org.csu.jpetstore.exception.ApiRequestException;
 import org.csu.jpetstore.service.AccountService;
 import org.csu.jpetstore.service.ItemService;
@@ -43,10 +44,24 @@ public class ItemController {
 
     /**Update Item*/
     @ApiOperation(value = "Update item" , authorizations = {@Authorization(value = "Bearer")})
-    @RequestMapping(value = "/updateItem", method = RequestMethod.PUT)
-    public void updateItem(@ApiIgnore Authentication auth, @RequestBody Item item){
-//        if (supplierService.selectSupplierByUserId(auth.getName()).contains())
+    @RequestMapping(method = RequestMethod.PUT, value = "/{id}")
+    public Map updateItem(@ApiIgnore Authentication auth, @RequestBody Item item, @PathVariable String id){
+        String userid = auth.getName();
+        Item item1 = itemService.findItemById(id).get(0);
+        //检测item id是否存在
+        //通过supplier也就是supplierid去supplierservice里去查找userid来判断当前用户是否有修改item的资格
+        if (item1 == null) {
+            throw new ApiRequestException("Item not exist!", HttpStatus.BAD_REQUEST);
+        }else if (!supplierService.selectSupplierByID(item.getSuppplier()).equals(userid)) {
+            throw new ApiRequestException("You don't have permission to operate.");
+        }
         itemService.updateItemInfo(item);
+        Map data = new HashMap();
+        data.put("error", false);
+        data.put("message", "Item updated success.");
+        data.put("id", id);
+        data.put("data",item);
+        return data;
     }
 
     /**findItemByProductid*/

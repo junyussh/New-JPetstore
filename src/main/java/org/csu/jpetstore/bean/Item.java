@@ -13,11 +13,11 @@ public class Item {
         this.id = id;
     }
 
-    private String suppplier;
+    private String supplier;
     private String product;
     private int quantity;
-    private int unitprice;
-    private int unitcost;
+    private int uniprice;
+    private int unicost;
     private String attribute;
 
     public Item(){
@@ -25,20 +25,20 @@ public class Item {
 
     public Item(String id, String suppplier, String product, int quantity, int unitprice, int unitcost, String attribute){
         this.id = id;
-        this.suppplier = suppplier;
+        this.supplier = suppplier;
         this.product = product;
         this.quantity = quantity;
-        this.unitprice = unitprice;
-        this.unitcost = unitcost;
+        this.uniprice = unitprice;
+        this.unicost = unitcost;
         this.attribute = attribute;
     }
 
     public String getSuppplier() {
-        return suppplier;
+        return supplier;
     }
 
     public void setSuppplier(String suppplier) {
-        this.suppplier = suppplier;
+        this.supplier = suppplier;
     }
 
     public String getProduct() {
@@ -58,19 +58,19 @@ public class Item {
     }
 
     public int getUnitprice() {
-        return unitprice;
+        return uniprice;
     }
 
     public void setUnitprice(int unitprice) {
-        this.unitprice = unitprice;
+        this.uniprice = unitprice;
     }
 
     public int getUnitcost() {
-        return unitcost;
+        return unicost;
     }
 
     public void setUnitcost(int unitcost) {
-        this.unitcost = unitcost;
+        this.unicost = unitcost;
     }
 
     public String getAttribute() {
