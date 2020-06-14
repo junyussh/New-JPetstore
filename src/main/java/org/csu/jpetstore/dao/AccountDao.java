@@ -10,6 +10,7 @@ import java.util.List;
 public interface AccountDao {
     /**
      * Find user by user's id
+     *
      * @param id
      * @return Account
      */
@@ -21,6 +22,10 @@ public interface AccountDao {
 
     @Select("SELECT * FROM Account")
     List<Account> findAllAccount();
+
+    @Select("SELECT * FROM Account where role = #{role}")
+    List<Account> findAccountByRole(@Param("role") String role);
+
 
     @Insert("INSERT into Account (id, username, password, email, firstName, lastName, status, address1, address2, city, state, zip, country, phone, role) " +
             "VALUES(#{id}, #{username}, #{password}, #{email}, #{firstName}, #{lastName}, #{status}, #{address1},  #{address2}, #{city}, #{state}, #{zip}, #{country}, #{phone}, #{role})")

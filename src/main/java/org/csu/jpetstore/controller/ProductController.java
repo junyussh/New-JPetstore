@@ -36,6 +36,7 @@ public class ProductController {
 
     /**
      * 获取当前用户的某一个supplier的所有product (查询当前商铺的所有商品)
+     *
      * @param supplierid
      * @return
      */
@@ -47,35 +48,33 @@ public class ProductController {
 
     /**
      * 获取当前用户的所有product,包括所有商铺 (查询当前用户的所有商品)
+     *
      * @param auth
      * @return
      */
     @ApiOperation(value = "Query all product of current [user]", authorizations = {@Authorization(value = "Bearer")})
     @RequestMapping(method = RequestMethod.GET, value = "/getUserAllProduct")
-    public List<Product> getUserAllProduct(@ApiIgnore Authentication auth){
+    public List<Product> getUserAllProduct(@ApiIgnore Authentication auth) {
         List<Supplier> suppliersList = supplierService.selectSupplierByUserId(auth.getName());
         List<Product> allProductList = new ArrayList<>();
-        for (Supplier supplier : suppliersList){
-            for (Product product : productService.getProductListBySupplierId(String.valueOf(supplier.getId()))){
-                allProductList.add(product);
-            }
+        for (Supplier supplier : suppliersList) {
+            allProductList.addAll(productService.getProductListBySupplierId(String.valueOf(supplier.getId())));
         }
         return allProductList;
     }
 
     /**
      * 获取当前平台的所有用户的所有product，包括所有所有用户的所有商铺 (查询平台的所有商品)
+     *
      * @return
      */
     @ApiOperation(value = "Query all product of current [platform]", authorizations = {@Authorization(value = "Bearer")})
     @RequestMapping(method = RequestMethod.GET, value = "/getPlatformAllProduct")
-    public List<Product> getPlatformAllProduct(){
+    public List<Product> getPlatformAllProduct() {
         List<Product> allProductList = new ArrayList<>();
-        for (Account account : accountService.selectAllAccount()){
-            for (Supplier supplier : supplierService.selectSupplierByUserId(String.valueOf(account.getId()))){
-                for (Product product : productService.getProductListBySupplierId(String.valueOf(supplier.getId()))){
-                    allProductList.add(product);
-                }
+        for (Account account : accountService.selectAllAccount()) {
+            for (Supplier supplier : supplierService.selectSupplierByUserId(String.valueOf(account.getId()))) {
+                allProductList.addAll(productService.getProductListBySupplierId(String.valueOf(supplier.getId())));
             }
         }
         return allProductList;
@@ -83,6 +82,7 @@ public class ProductController {
 
     /**
      * 添加新的 product
+     *
      * @param auth
      * @param product
      */
@@ -90,7 +90,7 @@ public class ProductController {
     @RequestMapping(value = "/addProduct", method = RequestMethod.POST)
     public void addProduct(@ApiIgnore Authentication auth, @RequestBody Product product) {
         // 首先判断是用户是否为seller
-        if (accountService.selectAccountByID(auth.getName()).getRole().equals("SELLER")){
+        if (accountService.selectAccountByID(auth.getName()).getRole().equals("SELLER")) {
             productService.insertProduct(product);
         }
     }
@@ -98,30 +98,51 @@ public class ProductController {
 
     /**
      * 修改product相关信息
+     *
      * @param auth
      * @param product
      */
     @ApiOperation(value = "Update product info", authorizations = {@Authorization(value = "Bearer")})
     @RequestMapping(value = "/updateProduct", method = RequestMethod.POST)
-    public void updateProduct(@ApiIgnore Authentication auth, @RequestBody Product product){
+    public void updateProduct(@ApiIgnore Authentication auth, @RequestBody Product product) {
+        System.out.println(product.getId());
         // 判断这个商品是否为当前用户的售卖范围：获取他的所有商铺是否包含商品所在的店铺
-        if (supplierService.selectSupplierByUserId(auth.getName()).contains(supplierService.selectSupplierByID(String.valueOf(productService.selectProductByID(String.valueOf(product.getId())).getSupplierId())))){
-            productService.updateProduct(product);
+        List<Supplier> supplierList = supplierService.selectSupplierByUserId(auth.getName());
+        for (Supplier supplier : supplierList) {
+            for (Product product1 : productService.getProductListBySupplierId(String.valueOf(supplier.getId()))) {
+                if (product1.getId().equals(product.getId())) {
+                    productService.updateProduct(product);
+                }
+            }
         }
+//        if (supplierService.selectSupplierByUserId(auth.getName()).contains(supplierService.selectSupplierByID(String.valueOf(productService.selectProductByID(String.valueOf(product.getId())).getSupplierId())))){
+//            System.out.println("is in");
+//            productService.updateProduct(product);
+//        }
     }
 
     /**
      * 删除product
+     *
      * @param auth
      * @param productid
      */
     @ApiOperation(value = "Delete product", authorizations = {@Authorization(value = "Bearer")})
-    @RequestMapping(value = "/deleteProduct", method = RequestMethod.GET)
-    public void deleteProduct(@ApiIgnore Authentication auth, @PathVariable String productid){
-        // 判断这个商品是否为当前用户的售卖范围：获取他的所有商铺是否包含商品所在的店铺
-        if (supplierService.selectSupplierByUserId(auth.getName()).contains(supplierService.selectSupplierByID(String.valueOf(productService.selectProductByID(productid).getSupplierId())))){
-            productService.deleteProduct(productid);
+    @RequestMapping(value = "/{productid}", method = RequestMethod.GET)
+    public void deleteProduct(@ApiIgnore Authentication auth, @PathVariable String productid) {
+        System.out.println(productid);
+        List<Supplier> supplierList = supplierService.selectSupplierByUserId(auth.getName());
+        for (Supplier supplier : supplierList) {
+            for (Product product1 : productService.getProductListBySupplierId(String.valueOf(supplier.getId()))) {
+                if (product1.getId().equals(productid)) {
+                    productService.deleteProduct(productid);
+                }
+            }
         }
+        // 判断这个商品是否为当前用户的售卖范围：获取他的所有商铺是否包含商品所在的店铺
+//        if (supplierService.selectSupplierByUserId(auth.getName()).contains(supplierService.selectSupplierByID(String.valueOf(productService.selectProductByID(productid).getSupplierId())))){
+//            productService.deleteProduct(productid);
+//        }
     }
 
 

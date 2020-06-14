@@ -18,9 +18,11 @@ public class SupplierService {
     public Supplier selectSupplierByID(String id) {
         return supplierDao.findSupplierByID(id);
     }
+
     public List<Supplier> selectSupplierByUserId(String userid) {
         return supplierDao.findSupplier(userid);
     }
+
     public void insertSupplier(Supplier supplier) {
         Integer id;
         do {
@@ -30,6 +32,7 @@ public class SupplierService {
         supplier.setId(id);
         supplierDao.insertSupplier(supplier);
     }
+
     public void deleteSupplier(String id) {
         supplierDao.deleteSupplier(id);
     }

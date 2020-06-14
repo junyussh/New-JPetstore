@@ -53,8 +53,8 @@ class JpetstoreApplicationTests {
         newAccount.setCity("Taipei");
         newAccount.setCountry("Taiwan");
         newAccount.setId(_id);
-        newAccount.setUsername("test");
-        newAccount.setPassword("admin");
+        newAccount.setUsername("temuser");
+        newAccount.setPassword("temuser");
         accountService.insertAccount(newAccount);
     }
 
@@ -165,15 +165,15 @@ class JpetstoreApplicationTests {
     void testGetProductListBySupplierId() {
         List<Product> productList = productService.getProductListBySupplierId("15509524");
         for (Product i : productList) {
-            System.out.println(i.getId()+"  "+i.getSupplierId()+"  "+i.getCategoryId());
+            System.out.println(i.getId() + "  " + i.getSupplierId() + "  " + i.getCategoryId());
         }
     }
 
     @Test
-    void testGetSupplierListByUserId(){
-        List<Supplier> supplierList =  supplierService.selectSupplierByUserId("30266518");
+    void testGetSupplierListByUserId() {
+        List<Supplier> supplierList = supplierService.selectSupplierByUserId("30266518");
         for (Supplier i : supplierList) {
-            System.out.println(i.getId()+"  "+i.getUserid()+"  "+i.getName());
+            System.out.println(i.getId() + "  " + i.getUserid() + "  " + i.getName());
         }
     }
 }

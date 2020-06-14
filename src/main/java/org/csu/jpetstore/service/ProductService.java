@@ -23,16 +23,17 @@ public class ProductService {
         return productDao.findProductByID(id);
     }
 
-    public Product selectProductByName(String name){
+    public Product selectProductByName(String name) {
         return productDao.findProductByName(name);
     }
 
-    public List<Product> getProductListBySupplierId(String supplierId){
+    public List<Product> getProductListBySupplierId(String supplierId) {
         return productDao.getProductListBySupplierId(supplierId);
     }
 
     /**
      * insert product
+     *
      * @param product
      */
     public void insertProduct(Product product) {
@@ -47,11 +48,11 @@ public class ProductService {
         productDao.insertProduct(product);
     }
 
-    public void deleteProduct(String id){
+    public void deleteProduct(String id) {
         productDao.deleteProduct(id);
     }
 
-    public void updateProduct(Product product){
+    public void updateProduct(Product product) {
         productDao.updateProductInfo(product);
     }
 }
