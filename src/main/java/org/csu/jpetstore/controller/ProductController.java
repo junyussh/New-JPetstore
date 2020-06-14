@@ -1,11 +1,8 @@
 package org.csu.jpetstore.controller;
 
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import org.csu.jpetstore.bean.Account;
-import org.csu.jpetstore.bean.Category;
 import org.csu.jpetstore.bean.Product;
 import org.csu.jpetstore.bean.Supplier;
 import org.csu.jpetstore.exception.ApiRequestException;
@@ -14,6 +11,7 @@ import org.csu.jpetstore.service.ProductService;
 import org.csu.jpetstore.service.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -45,8 +43,8 @@ public class ProductController {
      * @return
      */
     @ApiOperation(value = "Query all product of current [supplier]", authorizations = {@Authorization(value = "Bearer")})
-    @RequestMapping(method = RequestMethod.GET, value = "/{supplierid}")
-    public List<Product> getProductList(@PathVariable String supplierid) {
+    @RequestMapping(method = RequestMethod.GET, value = "/all?supplier={supplierid}")
+    public List<Product> getProductList(@RequestParam String supplierid) {
         return productService.getProductListBySupplierId(supplierid);
     }
 
@@ -73,7 +71,7 @@ public class ProductController {
      * @return
      */
     @ApiOperation(value = "Query all product of current [platform]", authorizations = {@Authorization(value = "Bearer")})
-    @RequestMapping(method = RequestMethod.GET, value = "/getPlatformAllProduct")
+    @RequestMapping(method = RequestMethod.GET, value = "/all")
     public List<Product> getPlatformAllProduct() {
         List<Product> allProductList = new ArrayList<>();
         for (Account account : accountService.selectAllAccount()) {
@@ -91,20 +89,18 @@ public class ProductController {
      * @param product
      */
     @ApiOperation(value = "Add new product", authorizations = {@Authorization(value = "Bearer")})
-    @RequestMapping(value = "/addProduct", method = RequestMethod.POST)
-    public Map addProduct(@ApiIgnore Authentication auth, @RequestBody Product product) {
-        // 首先判断是用户是否为seller
-        if (accountService.selectAccountByID(auth.getName()).getRole().equals("SELLER")) {
-            productService.insertProduct(product);
-        } else {
+    @RequestMapping(value = "/", method = RequestMethod.POST)
+    @PreAuthorize("isAuthenticated() and hasRole('SELLER')")
+    public void addProduct(@ApiIgnore Authentication auth, @RequestBody Product product) {
+        // if supplier belongs to current user
+        String supplierId = product.getId().toString();
+        Supplier supplier = supplierService.selectSupplierByID(supplierId);
+        if (supplier == null) {
+            throw new ApiRequestException("Supplier not exist", HttpStatus.BAD_REQUEST);
+        } else if (!supplier.getUserid().toString().equals(auth.getName())) {
             throw new ApiRequestException("You don't have permission to operate.");
         }
-        // exception handler
-        Map data = new HashMap();
-        data.put("message", "Product added success.");
-        data.put("id", product.getId());
-        data.put("error", false);
-        return data;
+        productService.insertProduct(product);
     }
 
 
