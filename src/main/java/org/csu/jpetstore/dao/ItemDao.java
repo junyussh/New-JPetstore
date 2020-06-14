@@ -28,7 +28,8 @@ public interface ItemDao {
     void deleteItem(@Param("id") String id);
 
 
-
+    @Select("select * from Item where id = #{id}")
+    List<Item> findItemById(@Param("id") String id);
 
 }
 

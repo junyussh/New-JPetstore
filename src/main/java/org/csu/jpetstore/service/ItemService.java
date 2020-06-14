@@ -32,4 +32,6 @@ public class ItemService {
     public void deleteItem(String id){
         itemDao.deleteItem(id);
     }
+
+    public List<Item> findItemById(String id){return itemDao.findItemById(id);}
 }
