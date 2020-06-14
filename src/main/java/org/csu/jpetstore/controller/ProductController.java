@@ -103,9 +103,10 @@ public class ProductController {
      * @param product
      */
     @ApiOperation(value = "Update product info", authorizations = {@Authorization(value = "Bearer")})
-    @RequestMapping(value = "/updateProduct", method = RequestMethod.POST)
-    public void updateProduct(@ApiIgnore Authentication auth, @RequestBody Product product) {
+    @RequestMapping(value = "/updateProduct", method = RequestMethod.PUT)
+    public void updateProduct(@ApiIgnore Authentication auth, @RequestBody Product product, @RequestParam String productid) {
         System.out.println(product.getId());
+        product.setId(Integer.valueOf(productid));
         // 判断这个商品是否为当前用户的售卖范围：获取他的所有商铺是否包含商品所在的店铺
         List<Supplier> supplierList = supplierService.selectSupplierByUserId(auth.getName());
         for (Supplier supplier : supplierList) {
@@ -128,17 +129,20 @@ public class ProductController {
      * @param productid
      */
     @ApiOperation(value = "Delete product", authorizations = {@Authorization(value = "Bearer")})
-    @RequestMapping(value = "/{productid}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{productid}", method = RequestMethod.DELETE)
     public void deleteProduct(@ApiIgnore Authentication auth, @PathVariable String productid) {
         System.out.println(productid);
         List<Supplier> supplierList = supplierService.selectSupplierByUserId(auth.getName());
         for (Supplier supplier : supplierList) {
             for (Product product1 : productService.getProductListBySupplierId(String.valueOf(supplier.getId()))) {
-                if (product1.getId().equals(productid)) {
+                // String to integer
+                if (product1.getId().equals(Integer.valueOf(productid))) {
+//                    System.out.println("check");
                     productService.deleteProduct(productid);
                 }
             }
         }
+//        productService.deleteProduct(productid);
         // 判断这个商品是否为当前用户的售卖范围：获取他的所有商铺是否包含商品所在的店铺
 //        if (supplierService.selectSupplierByUserId(auth.getName()).contains(supplierService.selectSupplierByID(String.valueOf(productService.selectProductByID(productid).getSupplierId())))){
 //            productService.deleteProduct(productid);
