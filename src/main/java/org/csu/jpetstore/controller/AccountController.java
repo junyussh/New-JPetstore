@@ -23,7 +23,7 @@ public class AccountController {
 
     private Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-    @ApiOperation(value = "Query user info", authorizations = {@Authorization(value = "Bearer")})
+    @ApiOperation(value = "Query current user info", authorizations = {@Authorization(value = "Bearer")})
     @RequestMapping(method = RequestMethod.GET, value = "/me")
     public Account getUser(@ApiIgnore Authentication auth) {
         Account account = accountService.selectAccountByID(auth.getName());
