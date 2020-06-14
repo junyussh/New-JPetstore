@@ -115,7 +115,7 @@ public class SupplierController {
         }
         supplierService.deleteSupplier(supplierid);
         // if user has no supplier, change his role to user
-        if (supplierService.selectSupplierByUserId(userid).size() == 0) {
+         if (supplierService.selectSupplierByUserId(userid).size()== 0) {
             accountService.updateAccountRole(auth.getName(), "USER");
         }
         Map data = new HashMap();

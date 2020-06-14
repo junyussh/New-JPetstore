@@ -5,15 +5,19 @@ import io.swagger.annotations.Authorization;
 import org.csu.jpetstore.bean.Category;
 import org.csu.jpetstore.bean.Item;
 import org.csu.jpetstore.bean.Product;
+import org.csu.jpetstore.exception.ApiRequestException;
 import org.csu.jpetstore.service.AccountService;
 import org.csu.jpetstore.service.ItemService;
 import org.csu.jpetstore.service.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api/item")
@@ -62,8 +66,16 @@ public class ItemController {
     /**deleteItem*/
     @ApiOperation(value = "Delete item", authorizations = {@Authorization(value = "Bearer")})
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
-    public void deleteItem(@PathVariable String id){
+    public Map deleteItem(@PathVariable String id){
+        if (itemService.findItemById(id) == null){
+            throw new ApiRequestException("Item not exist!", HttpStatus.BAD_REQUEST);
+        }
         itemService.deleteItem(id);
+        Map data = new HashMap();
+        data.put("message", "Item has been deleted.");
+        data.put("id", id);
+        data.put("error", false);
+        return data;
     }
 
 
