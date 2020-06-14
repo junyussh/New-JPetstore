@@ -23,7 +23,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping(value = "/api/product")
+@RequestMapping(value = "/api/products")
 public class ProductController {
 
     @Autowired
@@ -55,7 +55,7 @@ public class ProductController {
      * @return
      */
     @ApiOperation(value = "Query all product of current [user]", authorizations = {@Authorization(value = "Bearer")})
-    @RequestMapping(method = RequestMethod.GET, value = "/getUserAllProduct")
+    @RequestMapping(method = RequestMethod.GET, value = "/userAll")
     public List<Product> getUserAllProduct(@ApiIgnore Authentication auth) {
         List<Supplier> suppliersList = supplierService.selectSupplierByUserId(auth.getName());
         List<Product> allProductList = new ArrayList<>();
@@ -111,7 +111,7 @@ public class ProductController {
      * @param product
      */
     @ApiOperation(value = "Update product info", authorizations = {@Authorization(value = "Bearer")})
-    @RequestMapping(value = "/updateProduct", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{productid}", method = RequestMethod.PUT)
     public Map updateProduct(@ApiIgnore Authentication auth, @RequestBody Product product, @RequestParam String productid) {
         System.out.println(product.getId());
         product.setId(Integer.valueOf(productid));
