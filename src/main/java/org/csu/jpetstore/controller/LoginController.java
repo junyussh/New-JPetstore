@@ -40,7 +40,7 @@ public class LoginController {
      * @return
      */
     @ApiOperation("Authenticate")
-    @ApiResponses(value = {@ApiResponse(code=200,message = "Login Success"), @ApiResponse(code = 401, message = "Invalid username or password")})
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Login Success"), @ApiResponse(code = 401, message = "Invalid username or password")})
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Map login(@RequestBody Map<String, String> params) {
         Map data = new HashMap();
@@ -54,8 +54,7 @@ public class LoginController {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(username, password)
             );
-        }
-        catch (BadCredentialsException e) {
+        } catch (BadCredentialsException e) {
             throw new ApiRequestException("Invalid username or password!", HttpStatus.UNAUTHORIZED);
         }
 
@@ -67,9 +66,16 @@ public class LoginController {
         data.put("id", userDetails.getUsername());
         data.put("username", username);
         data.put("message", "Login success");
+        data.put("error", false);
         return data;
     }
 
+    /**
+     * Register
+     * @param param
+     * @return
+     */
+    @ApiOperation("Register")
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public Account register(@RequestBody Account param) {
         accountService.insertAccount(param);

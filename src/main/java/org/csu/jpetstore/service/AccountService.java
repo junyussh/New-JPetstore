@@ -20,6 +20,7 @@ public class AccountService {
 
     /**
      * Query user by id
+     *
      * @param id
      * @return
      */
@@ -30,8 +31,10 @@ public class AccountService {
     public Account selectAccountByUsername(String username) {
         return accountDao.findAccountByUsername(username);
     }
+
     /**
      * Get all users
+     *
      * @return
      */
     public List<Account> selectAllAccount() {
@@ -39,7 +42,18 @@ public class AccountService {
     }
 
     /**
+     * get specific role userlist
+     *
+     * @param role
+     * @return
+     */
+    public List<Account> selectAccountByRole(String role) {
+        return accountDao.findAccountByRole(role);
+    }
+
+    /**
      * Insert new user
+     *
      * @param account
      */
     public void insertAccount(Account account) {
@@ -54,15 +68,19 @@ public class AccountService {
         account.setRole("USER");
         accountDao.insertAccount(account);
     }
+
     public void updateAccountInfo(Account account) {
         accountDao.updateAccountInfo(account);
     }
+
     public void updateAccountStatus(String id, boolean status) {
         accountDao.updateAccountStatus(id, status);
     }
+
     public void updateAccountRole(String id, String role) {
         accountDao.updateAccountRole(id, role);
     }
+
     public void deleteAccount(String id) {
         accountDao.deleteAccount(id);
     }

@@ -3,6 +3,15 @@ package org.csu.jpetstore.bean;
 import io.swagger.models.auth.In;
 
 public class Product {
+
+    private Integer id;
+    private Integer supplierId;
+    private Integer categoryId;
+    private String name;
+    private String description;
+    private String image;
+
+
     public Integer getId() {
         return id;
     }
@@ -11,8 +20,6 @@ public class Product {
         this.id = id;
     }
 
-    private Integer id;
-
     public Integer getSupplierId() {
         return supplierId;
     }
@@ -20,15 +27,6 @@ public class Product {
     public void setSupplierId(Integer supplierId) {
         this.supplierId = supplierId;
     }
-
-    private Integer supplierId;
-    private Integer categoryId;
-    private String name;
-    private String description;
-    private String descriptionText;
-    private String descriptionImage;
-
-    
 
     public Integer getCategoryId() {
         return categoryId;
@@ -54,24 +52,11 @@ public class Product {
         this.description = description;
     }
 
-    public String getDescriptionText() {
-        return descriptionText;
+    public String getImage() {
+        return image;
     }
 
-    public void setDescriptionText(String descriptionText) {
-        this.descriptionText = descriptionText;
+    public void setImage(String image) {
+        this.image = image;
     }
-
-    public String toString() {
-        return getName();
-    }
-
-    public String getDescriptionImage() {
-        return descriptionImage;
-    }
-
-    public void setDescriptionImage(String descriptionImage) {
-        this.descriptionImage = descriptionImage;
-    }
-
 }

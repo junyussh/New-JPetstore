@@ -17,6 +17,9 @@ public interface SupplierDao {
             "VALUES(#{id}, #{userid}, #{name}, #{address1}, #{address2}, #{city}, #{state}, #{zip}, #{phone})")
     void insertSupplier(Supplier supplier);
 
+    @Update("UPDATE Supplier SET name=#{name}, address1=#{address1}, address2=#{address2}, city=#{city}, state=#{state}, zip=#{zip}, phone=#{phone} WHERE id=#{id}")
+    void updateSupplier(Supplier supplier);
+
     @Delete("DELETE FROM Supplier WHERE id=#{id}")
     void deleteSupplier(@Param("id") String id);
 }

@@ -15,6 +15,9 @@ public interface ProductDao {
     @Select("select * from Product where name = #{name}")
     Product findProductByName(@Param("name") String name);
 
+    @Select("select * from Product")
+    List<Product> selectAllProducts();
+
     /**
      * get all product by categoryid
      * @return

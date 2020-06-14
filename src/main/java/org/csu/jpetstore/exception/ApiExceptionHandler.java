@@ -22,6 +22,7 @@ public class ApiExceptionHandler {
         // return response entity
         return new ResponseEntity<>(apiException, e.getStatus());
     }
+
     @ExceptionHandler(value = {SignatureException.class})
     public ResponseEntity<Object> handleSignatureException(SignatureException e) {
         // create payload containing exception details

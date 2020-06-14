@@ -23,7 +23,7 @@ public class CategoryService {
         return categoryDao.findCategoryByID(id);
     }
 
-    public Category selectCategoryByName(String name){
+    public Category selectCategoryByName(String name) {
         return categoryDao.findCategoryByName(name);
     }
 
@@ -31,6 +31,7 @@ public class CategoryService {
      * insert new Category
      * first step: find by id
      * second step: insert
+     *
      * @param category
      */
     public void insertCategory(Category category) {
@@ -45,19 +46,21 @@ public class CategoryService {
 
     /**
      * delete by name but not id
+     *
      * @param name
      */
-    public void deleteCategory(String name){
+    public void deleteCategory(String name) {
         categoryDao.deleteCategory(name);
     }
 
     /**
      * update name
+     *
      * @param name
      * @param id
      */
-    public void updateCategoryName(String newName,String id){
-        categoryDao.updateCategory(newName,id);
+    public void updateCategoryName(String newName, String id) {
+        categoryDao.updateCategory(newName, id);
     }
 
 }

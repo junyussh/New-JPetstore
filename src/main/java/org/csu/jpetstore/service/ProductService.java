@@ -1,6 +1,5 @@
 package org.csu.jpetstore.service;
 
-import org.csu.jpetstore.bean.Category;
 import org.csu.jpetstore.bean.Product;
 import org.csu.jpetstore.dao.ProductDao;
 import org.csu.jpetstore.util.IDGenerator;
@@ -23,16 +22,20 @@ public class ProductService {
         return productDao.findProductByID(id);
     }
 
-    public Product selectProductByName(String name){
+    public Product selectProductByName(String name) {
         return productDao.findProductByName(name);
     }
 
-    public List<Product> getProductListBySupplierId(String supplierId){
+    public List<Product> selectAllProducts() {
+        return productDao.selectAllProducts();
+    }
+    public List<Product> getProductListBySupplierId(String supplierId) {
         return productDao.getProductListBySupplierId(supplierId);
     }
 
     /**
      * insert product
+     *
      * @param product
      */
     public void insertProduct(Product product) {
@@ -47,11 +50,11 @@ public class ProductService {
         productDao.insertProduct(product);
     }
 
-    public void deleteProduct(String id){
+    public void deleteProduct(String id) {
         productDao.deleteProduct(id);
     }
 
-    public void updateProduct(Product product){
+    public void updateProduct(Product product) {
         productDao.updateProductInfo(product);
     }
 }

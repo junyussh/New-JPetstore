@@ -18,6 +18,7 @@ public interface CategoryDao {
 
     /**
      * find all category
+     *
      * @return
      */
     @Select("SELECT * FROM Category")
@@ -28,14 +29,16 @@ public interface CategoryDao {
 
     /**
      * update Category a new name by id
+     *
      * @param newName
      * @param id
      */
     @Update("UPDATE Category SET name=#{newName} WHERE id=#{id}")
-    void updateCategory(@Param("newName") String newName ,@Param("id") String id);
+    void updateCategory(@Param("newName") String newName, @Param("id") String id);
 
     /**
      * delete category by name
+     *
      * @param name
      */
     @Delete("DELETE FROM Category WHERE name=#{name}")
