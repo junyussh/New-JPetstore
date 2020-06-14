@@ -28,10 +28,11 @@ public class SupplierController {
 
     /**
      * 获取当前用户的所有店铺
+     *
      * @param auth
      * @return
      */
-    @ApiOperation(value = "Query all suppliers of current user" , authorizations = {@Authorization(value = "Bearer")})
+    @ApiOperation(value = "Query all suppliers of current user", authorizations = {@Authorization(value = "Bearer")})
     @RequestMapping(method = RequestMethod.GET, value = "/")
     @PreAuthorize("isAuthenticated() and hasRole('SELLER')")
     public List<Supplier> getSupplierListByUserId(@ApiIgnore Authentication auth) {
@@ -40,6 +41,7 @@ public class SupplierController {
 
     /**
      * Query supplier's information
+     *
      * @param id
      * @return
      */
@@ -52,11 +54,12 @@ public class SupplierController {
 
     /**
      * New supplier
+     *
      * @param auth
      * @param supplier
      * @return
      */
-    @ApiOperation(value = "Create new supplier" , authorizations = {@Authorization(value = "Bearer")})
+    @ApiOperation(value = "Create new supplier", authorizations = {@Authorization(value = "Bearer")})
     @RequestMapping(method = RequestMethod.POST, value = "/")
     @PreAuthorize("isAuthenticated() and !hasRole('ROLE_ADMIN')")
     public Supplier newSupplier(@ApiIgnore Authentication auth, @RequestBody Supplier supplier) {
@@ -74,7 +77,7 @@ public class SupplierController {
      * @param supplierId
      * @return
      */
-    @ApiOperation(value = "Update supplier information" , authorizations = {@Authorization(value = "Bearer")})
+    @ApiOperation(value = "Update supplier information", authorizations = {@Authorization(value = "Bearer")})
     @RequestMapping(method = RequestMethod.PUT, value = "/{supplierId}")
     @PreAuthorize("isAuthenticated() and hasRole('SELLER')")
     public Map updateSupplier(@ApiIgnore Authentication auth, @RequestBody Supplier supplier, @PathVariable Integer supplierId) {
@@ -97,13 +100,15 @@ public class SupplierController {
 
     /**
      * 删除店铺
+     *
      * @param auth
      * @param supplierid
+     * @return
      */
-    @ApiOperation(value = "Delete supplier" , authorizations = {@Authorization(value = "Bearer")})
+    @ApiOperation(value = "Delete supplier", authorizations = {@Authorization(value = "Bearer")})
     @RequestMapping(method = RequestMethod.DELETE, value = "/{supplierid}")
     @PreAuthorize("isAuthenticated() and hasRole('SELLER')")
-    public Map deleteSupplier(@ApiIgnore Authentication auth, @PathVariable String supplierid){
+    public Map deleteSupplier(@ApiIgnore Authentication auth, @PathVariable String supplierid) {
         String userid = auth.getName();
         if (supplierService.selectSupplierByID(supplierid) == null) {
             throw new ApiRequestException("Supplier not exist!", HttpStatus.BAD_REQUEST);

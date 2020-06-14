@@ -13,7 +13,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api/user")
@@ -85,9 +87,15 @@ public class AccountController {
     @ApiOperation(value = "Update account info", authorizations = {@Authorization(value = "Bearer")})
     @RequestMapping(method = RequestMethod.PUT, value = "/{accountid}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public void updateAccount(@RequestBody Account account, @PathVariable String accountid) {
+    public Map updateAccount(@RequestBody Account account, @PathVariable String accountid) {
         account.setId(Integer.valueOf(accountid));
         accountService.updateAccountInfo(account);
+        // exception
+        Map data = new HashMap();
+        data.put("message", "Account updated success");
+        data.put("id", accountid);
+        data.put("error", false);
+        return data;
     }
 
 
