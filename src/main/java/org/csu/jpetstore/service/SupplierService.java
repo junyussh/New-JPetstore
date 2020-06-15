@@ -1,5 +1,6 @@
 package org.csu.jpetstore.service;
 
+import org.csu.jpetstore.bean.Item;
 import org.csu.jpetstore.bean.Supplier;
 import org.csu.jpetstore.dao.SupplierDao;
 import org.csu.jpetstore.util.IDGenerator;
@@ -38,6 +39,10 @@ public class SupplierService {
 
     public void deleteSupplier(String id) {
         supplierDao.deleteSupplier(id);
+    }
+
+    public List<Supplier> selectAllSupplier() {
+        return supplierDao.selectAllSupplier();
     }
 
 }

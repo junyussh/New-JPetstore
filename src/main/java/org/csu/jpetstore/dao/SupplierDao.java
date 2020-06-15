@@ -1,6 +1,7 @@
 package org.csu.jpetstore.dao;
 
 import org.apache.ibatis.annotations.*;
+import org.csu.jpetstore.bean.Item;
 import org.csu.jpetstore.bean.Supplier;
 
 import java.util.List;
@@ -22,4 +23,7 @@ public interface SupplierDao {
 
     @Delete("DELETE FROM Supplier WHERE id=#{id}")
     void deleteSupplier(@Param("id") String id);
+
+    @Select("select * from Supplier")
+    List<Supplier> selectAllSupplier();
 }
