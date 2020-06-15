@@ -45,6 +45,10 @@ public class ProductController {
     @ApiOperation(value = "Query product by ID")
     @RequestMapping(method = RequestMethod.GET, value = "/{productId}")
     public Product getProductByID(@PathVariable String productId) {
+        Product product = productService.selectProductByID(productId);
+        if (product == null) {
+            throw new ApiRequestException("Product not exist!", HttpStatus.BAD_REQUEST);
+        }
         return productService.selectProductByID(productId);
     }
 

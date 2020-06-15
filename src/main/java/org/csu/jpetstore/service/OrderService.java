@@ -24,7 +24,7 @@ public class OrderService {
     }
 
     public List<Order> selectOrdersByUserId(String userId) {
-        return orderDao.findOrdersBySupplierId(userId);
+        return orderDao.findOrdersByUserId(userId);
     }
 
     public List<Order> selectOrdersBySupplierId(String supplierId) {

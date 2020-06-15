@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -35,6 +36,12 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
+    /**
+     * Create new order
+     * @param auth
+     * @param param
+     * @return
+     */
     @ApiOperation(value = "Create new order", authorizations = {@Authorization(value = "Bearer")})
     @RequestMapping(value = "/", method = RequestMethod.POST)
     @PreAuthorize("isAuthenticated() and !hasRole('ADMIN')")
@@ -70,5 +77,28 @@ public class OrderController {
             itemService.updateItem(item);
         }
         return param;
+    }
+
+    /**
+     * Fetch all orders that user order
+     * @param auth
+     * @return
+     */
+    @ApiOperation(value = "Query all orders of current user", authorizations = {@Authorization(value = "Bearer")})
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and !hasRole('ADMIN')")
+    public List<Order> getOrdersByUser(@ApiIgnore Authentication auth) {
+        return orderService.selectOrdersByUserId(auth.getName());
+    }
+
+    /**
+     * Query all orders
+     * @return
+     */
+    @ApiOperation(value = "Query all orders(Admin)", authorizations = {@Authorization(value = "Bearer")})
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and hasRole('ADMIN')")
+    public List<Order> getAllOrders() {
+        return orderService.selectAllOrders();
     }
 }
