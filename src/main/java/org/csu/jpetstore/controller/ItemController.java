@@ -96,19 +96,6 @@ public class ItemController {
         return data;
     }
 
-    /**findItemByProductid*/
-    @ApiOperation(value = "find item by prodcutid", authorizations = {@Authorization(value = "Bearer")})
-    @RequestMapping(method = RequestMethod.GET, value = "/all?product={productId}")
-    public List<Item> findItemByProductId(@PathVariable String productId) {
-        return itemService.selectItemByProductId(productId);
-    }
-
-    /**findItemBySuppplierid*/
-    @ApiOperation(value = "find item by supplierid", authorizations = {@Authorization(value = "Bearer")})
-    @RequestMapping(method = RequestMethod.GET, value = "/all?supplier={suppplierId}")
-    public List<Item> findItemBySuppplierid(@PathVariable int suppplierId) {
-        return itemService.findItemBySuppplierid(suppplierId);
-    }
 
     /**
      * Query all items
@@ -118,6 +105,21 @@ public class ItemController {
     @RequestMapping(method = RequestMethod.GET, value = "/all")
     public List<Item> selectAllItems() {
         return itemService.selectAllItems();
+    }
+
+    /**findItemBySuppplierid*/
+    @ApiOperation(value = "find item by supplierid")
+    @RequestMapping(method = RequestMethod.GET, value = "/all?supplier={supplierId}")
+    public List<Item> findItemBySupplierId(@PathVariable String supplierId) {
+        System.out.println(supplierId);
+        return itemService.selectItemBySupplierId(supplierId);
+    }
+
+    /**findItemByProductid*/
+    @ApiOperation(value = "find item by prodcutid")
+    @RequestMapping(method = RequestMethod.GET, value = "/all?product={productId}")
+    public List<Item> findItemByProductId(@PathVariable String productId) {
+        return itemService.selectItemByProductId(productId);
     }
 
     /**deleteItem*/

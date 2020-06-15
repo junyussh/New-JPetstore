@@ -28,12 +28,12 @@ public class ItemService {
         itemDao.updateItem(item);
     }
 
-    public List<Item> selectItemByProductId(String productid){
-        return itemDao.findItemByProductId(productid);
+    public List<Item> selectItemByProductId(String productId){
+        return itemDao.findItemByProductId(productId);
     }
 
-    public List<Item> findItemBySuppplierid(int supplierid){
-        return itemDao.findItemBySuppplierid(supplierid);
+    public List<Item> selectItemBySupplierId(String supplierId){
+        return itemDao.findItemBySupplierId(supplierId);
     }
 
     public List<Item> selectAllItems() {

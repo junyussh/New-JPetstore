@@ -48,7 +48,11 @@ public class SupplierController {
     @ApiOperation(value = "Query supplier's information by supplierID")
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     public Supplier getSupplierByID(@PathVariable String id) {
-        return supplierService.selectSupplierByID(id);
+        Supplier supplier = supplierService.selectSupplierByID(id);
+        if (supplier == null) {
+            throw new ApiRequestException("Supplier not exist!", HttpStatus.BAD_REQUEST);
+        }
+        return supplier;
     }
 
     /**

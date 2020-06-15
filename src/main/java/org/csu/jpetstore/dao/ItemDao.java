@@ -17,11 +17,11 @@ public interface ItemDao {
     @Update("UPDATE Item SET quantity=#{quantity}, unitprice=#{unitprice}, unitcost=#{unitcost}, attribute=#{attribute}")
     void updateItem(Item item);
 
-    @Select("select * from Item where productId = #{productid}")
-    List<Item> findItemByProductId(@Param("productid") String productid);
+    @Select("select * from Item where productId = #{productId}")
+    List<Item> findItemByProductId(@Param("productId") String productId);
 
-    @Select("select * from Item where supplierId = #{supplierid}")
-    List<Item> findItemBySuppplierid(@Param("supplierid")  int supplierid);
+    @Select("select * from Item where supplierId = #{supplierId}")
+    List<Item> findItemBySupplierId(@Param("supplierId") String supplierId);
 
     @Select("select * from Item")
     List<Item> selectAllItems();

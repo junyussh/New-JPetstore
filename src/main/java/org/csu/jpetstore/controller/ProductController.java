@@ -35,17 +35,7 @@ public class ProductController {
     private SupplierService supplierService;
 
 
-    /**
-     * 获取当前用户的某一个supplier的所有product (查询当前商铺的所有商品)
-     *
-     * @param supplierId
-     * @return
-     */
-    @ApiOperation(value = "Query all product of current [supplier]")
-    @RequestMapping(method = RequestMethod.GET, value = "/all?supplier={supplierId}")
-    public List<Product> getProductList(@RequestParam String supplierId) {
-        return productService.getProductListBySupplierId(supplierId);
-    }
+
 
     /**
      * Query product by ID
@@ -77,15 +67,24 @@ public class ProductController {
     }
 
     /**
-     * 获取当前平台的所有用户的所有product，包括所有所有用户的所有商铺 (查询平台的所有商品)
-     *
+     * Retrieve all products from database
+     * Filter by supplier ID is available
+     * @param supplierId
      * @return
      */
     @ApiOperation(value = "Query all product in database")
     @RequestMapping(method = RequestMethod.GET, value = "/all")
-    public List<Product> getAllProducts() {
+    public List<Product> getAllProducts(@RequestParam(value = "supplierId", required = false) String supplierId) {
+        if (supplierId != null) {
+            Supplier supplier = supplierService.selectSupplierByID(supplierId);
+            if (supplier == null) {
+                throw new ApiRequestException("Supplier not exist", HttpStatus.BAD_REQUEST);
+            }
+            return productService.getProductListBySupplierId(supplierId);
+        }
         return productService.selectAllProducts();
     }
+
 
     /**
      * Create new product
@@ -111,7 +110,7 @@ public class ProductController {
 
 
     /**
-     * 修改product相关信息
+     * Modify product's information
      *
      * @param auth
      * @param product
@@ -119,7 +118,7 @@ public class ProductController {
     @ApiOperation(value = "Update product info", authorizations = {@Authorization(value = "Bearer")})
     @RequestMapping(value = "/{productId}", method = RequestMethod.PUT)
     @PreAuthorize("isAuthenticated() and hasRole('SELLER')")
-    public Map updateProduct(@ApiIgnore Authentication auth, @RequestBody Product product, @RequestParam String productId) {
+    public Map updateProduct(@ApiIgnore Authentication auth, @RequestBody Product product, @PathVariable String productId) {
         product.setId(Integer.valueOf(productId));
         // target supplierId
         String supplierId = product.getSupplierId().toString();
