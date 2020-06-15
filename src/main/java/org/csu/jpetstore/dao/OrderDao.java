@@ -2,7 +2,6 @@ package org.csu.jpetstore.dao;
 
 import org.apache.ibatis.annotations.*;
 import org.csu.jpetstore.bean.Order;
-import org.csu.jpetstore.bean.Product;
 
 import java.util.List;
 
@@ -24,13 +23,13 @@ public interface OrderDao {
     @Select("select * from Orders where id=#{id}")
     Order findOrderByID(@Param("id") String id);
 
-    @Insert("INSERT into Orders (id, userId, productId, supplierId, quantity, productName, created, status, shipaddr1, shipaddr2, shipcity, shipstate, shipzip, shipcountry, billaddr1, billaddr2, billcity, billstate, billzip, billcountry, courier, total, billtofirstname, billtolastname, shiptofirstname, shiptolastname, creditcard, exprdate, cardtype, locale) VALUES(#{id}, #{userId}, #{productId}, #{supplierId}, #{quantity}, #{productName}, #{created}, #{status}, #{shipaddr1}, #{shipaddr2}, #{shipcity}, #{shipstate}, #{shipzip}, #{shipcountry}, #{billaddr1}, #{billaddr2}, #{billcity}, #{billstate}, #{billzip}, #{billcountry}, #{courier}, #{total}, #{billtofirstname}, #{billtolastname}, #{shiptofirstname}, #{shiptolastname}, #{creditcard}, #{exprdate}, #{cardtype}, #{locale})")
+    @Insert("INSERT into Orders (id, userId, productId, productName, supplierId, quantity, total, status, created, shipAddr1, shipAddr2, shipCity, shipState, shipZip, shipCountry, courier, billToFirstName, billToLastName, creditCard, exprDate, cardType) VALUES(#{id}, #{userId}, #{productId}, #{productName}, #{supplierId}, #{quantity}, #{total}, #{status}, #{created}, #{shipAddr1}, #{shipAddr2}, #{shipCity}, #{shipState}, #{shipZip}, #{shipCountry}, #{courier}, #{billToFirstName}, #{billToLastName}, #{creditCard}, #{exprDate}, #{cardType})")
     void insertOrder(Order order);
 
-    @Update("UPDATE Orders SET userId=#{userId}, productId=#{productId}, supplierId=#{supplierId}, quantity=#{quantity}, productName=#{productName}, created=#{created}, status=#{status}, shipaddr1=#{shipaddr1}, shipaddr2=#{shipaddr2}, shipcity=#{shipcity}, shipstate=#{shipstate}, shipzip=#{shipzip}, shipcountry=#{shipcountry}, billaddr1=#{billaddr1}, billaddr2=#{billaddr2}, billcity=#{billcity}, billstate=#{billstate}, billzip=#{billzip}, billcountry=#{billcountry}, courier=#{courier}, total=#{total}, billtofirstname=#{billtofirstname}, billtolastname=#{billtolastname}, shiptofirstname=#{shiptofirstname}, shiptolastname=#{shiptolastname}, creditcard=#{creditcard}, exprdate=#{exprdate}, cardtype=#{cardtype}, locale=#{locale} WHERE id=#{id}")
+    @Update("UPDATE Orders SET userId=#{userId}, productId=#{productId}, productName=#{productName}, supplierId=#{supplierId}, quantity=#{quantity}, total=#{total}, status=#{status}, created=#{created}, shipAddr1=#{shipAddr1}, shipAddr2=#{shipAddr2}, shipCity=#{shipCity}, shipState=#{shipState}, shipZip=#{shipZip}, shipCountry=#{shipCountry}, courier=#{courier}, billToFirstName=#{billToFirstName}, billToLastName=#{billToLastName}, creditCard=#{creditCard}, exprDate=#{exprDate}, cardType=#{cardType} WHERE id=#{id}")
     void updateOrder(Order order);
 
-    @Delete("DELETE FROM Order WHERE id=#{id}")
+    @Delete("DELETE FROM Orders WHERE id=#{id}")
     void deleteOrder(@Param("id") String id);
 
 }
