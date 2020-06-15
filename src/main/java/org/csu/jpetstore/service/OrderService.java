@@ -2,6 +2,7 @@ package org.csu.jpetstore.service;
 
 import org.csu.jpetstore.bean.Order;
 import org.csu.jpetstore.dao.OrderDao;
+import org.csu.jpetstore.util.IDGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,12 @@ import java.util.List;
 public class OrderService {
     @Autowired
     private OrderDao orderDao;
+    @Autowired
+    private IDGenerator idGenerator;
+
+    public Order selectOrderByID(String id) {
+        return orderDao.findOrderByID(id);
+    }
 
     public List<Order> selectAllOrders() {
         return orderDao.findAllOrders();
@@ -33,6 +40,11 @@ public class OrderService {
     }
 
     public void insertOrder(Order order) {
+        Integer id;
+        do {
+            id = idGenerator.getID();
+        } while (this.selectOrderByID(id.toString()) != null);
+        order.setId(id);
         orderDao.insertOrder(order);
     }
 

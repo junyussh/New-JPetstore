@@ -1,15 +1,20 @@
 package org.csu.jpetstore.bean;
 
+import java.sql.Timestamp;
+
 public class Order {
     private Integer id;
     private Integer userId;
+    private Integer itemId;
     private Integer productId;
-    private String productName;
     private Integer supplierId;
+    private String itemAttribute;
+    private String productName;
+    private String supplierName;
     private Integer quantity;
-    private Integer total;
+    private Float total;
     private String status;
-    private String created;
+    private Timestamp created;
     private String shipAddr1;
     private String shipAddr2;
     private String shipCity;
@@ -22,6 +27,9 @@ public class Order {
     private String creditCard;
     private String exprDate;
     private String cardType;
+
+    public Order() {
+    }
 
     public Integer getId() {
         return id;
@@ -71,28 +79,12 @@ public class Order {
         this.quantity = quantity;
     }
 
-    public Integer getTotal() {
-        return total;
-    }
-
-    public void setTotal(Integer total) {
-        this.total = total;
-    }
-
     public String getStatus() {
         return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public String getCreated() {
-        return created;
-    }
-
-    public void setCreated(String created) {
-        this.created = created;
     }
 
     public String getShipAddr1() {
@@ -189,5 +181,45 @@ public class Order {
 
     public void setCardType(String cardType) {
         this.cardType = cardType;
+    }
+
+    public Integer getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(Integer itemId) {
+        this.itemId = itemId;
+    }
+
+    public String getItemAttribute() {
+        return itemAttribute;
+    }
+
+    public void setItemAttribute(String itemAttribute) {
+        this.itemAttribute = itemAttribute;
+    }
+
+    public String getSupplierName() {
+        return supplierName;
+    }
+
+    public void setSupplierName(String supplierName) {
+        this.supplierName = supplierName;
+    }
+
+    public Float getTotal() {
+        return total;
+    }
+
+    public void setTotal(Float total) {
+        this.total = total;
+    }
+
+    public Timestamp getCreated() {
+        return created;
+    }
+
+    public void setCreated(Timestamp created) {
+        this.created = created;
     }
 }

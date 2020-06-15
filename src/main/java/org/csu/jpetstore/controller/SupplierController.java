@@ -3,7 +3,6 @@ package org.csu.jpetstore.controller;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.csu.jpetstore.bean.Account;
-import org.csu.jpetstore.bean.Item;
 import org.csu.jpetstore.bean.Supplier;
 import org.csu.jpetstore.exception.ApiRequestException;
 import org.csu.jpetstore.service.AccountService;
@@ -28,7 +27,6 @@ public class SupplierController {
     @Autowired
     private AccountService accountService;
 
-
     /**
      * Query all supplier
      * @return
@@ -39,20 +37,19 @@ public class SupplierController {
         if (userId != null){
             Account account = accountService.selectAccountByID(userId);
             if (account == null){
-                throw new ApiRequestException("UserId not exist", HttpStatus.BAD_REQUEST);
+                throw new ApiRequestException("User not exist", HttpStatus.BAD_REQUEST);
             }
             return supplierService.selectSupplierByUserId(userId);
         }
         return supplierService.selectAllSupplier();
     }
 
-                                     /**
-     * 获取当前用户的所有店铺
-     *
+    /**
+     * Retrieve all the supplier that user owns
      * @param auth
      * @return
      */
-                                     @ApiOperation(value = "Query all suppliers of current user", authorizations = {@Authorization(value = "Bearer")})
+    @ApiOperation(value = "Query all suppliers of current user", authorizations = {@Authorization(value = "Bearer")})
     @RequestMapping(method = RequestMethod.GET, value = "/")
     @PreAuthorize("isAuthenticated() and hasRole('SELLER')")
     public List<Supplier> getSupplierListByUserId(@ApiIgnore Authentication auth) {

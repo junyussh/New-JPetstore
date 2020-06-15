@@ -23,7 +23,8 @@ public interface OrderDao {
     @Select("select * from Orders where id=#{id}")
     Order findOrderByID(@Param("id") String id);
 
-    @Insert("INSERT into Orders (id, userId, productId, productName, supplierId, quantity, total, status, created, shipAddr1, shipAddr2, shipCity, shipState, shipZip, shipCountry, courier, billToFirstName, billToLastName, creditCard, exprDate, cardType) VALUES(#{id}, #{userId}, #{productId}, #{productName}, #{supplierId}, #{quantity}, #{total}, #{status}, #{created}, #{shipAddr1}, #{shipAddr2}, #{shipCity}, #{shipState}, #{shipZip}, #{shipCountry}, #{courier}, #{billToFirstName}, #{billToLastName}, #{creditCard}, #{exprDate}, #{cardType})")
+    @Insert("INSERT into Orders (id, userId, itemId, productId, supplierId, itemAttribute, productName, supplierName, quantity, total, status, created, shipAddr1, shipAddr2, shipCity, shipState, shipZip, shipCountry, courier, billToFirstName, billToLastName, creditCard, exprDate, cardType) VALUES" +
+            "(#{id}, #{userId}, #{itemId}, #{productId}, #{supplierId}, #{itemAttribute}, #{productName}, #{supplierName}, #{quantity}, #{total}, #{status}, #{created}, #{shipAddr1}, #{shipAddr2}, #{shipCity}, #{shipState}, #{shipZip}, #{shipCountry}, #{courier}, #{billToFirstName}, #{billToLastName}, #{creditCard}, #{exprDate}, #{cardType})")
     void insertOrder(Order order);
 
     @Update("UPDATE Orders SET userId=#{userId}, productId=#{productId}, productName=#{productName}, supplierId=#{supplierId}, quantity=#{quantity}, total=#{total}, status=#{status}, created=#{created}, shipAddr1=#{shipAddr1}, shipAddr2=#{shipAddr2}, shipCity=#{shipCity}, shipState=#{shipState}, shipZip=#{shipZip}, shipCountry=#{shipCountry}, courier=#{courier}, billToFirstName=#{billToFirstName}, billToLastName=#{billToLastName}, creditCard=#{creditCard}, exprDate=#{exprDate}, cardType=#{cardType} WHERE id=#{id}")

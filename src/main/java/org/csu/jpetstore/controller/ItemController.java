@@ -98,7 +98,10 @@ public class ItemController {
 
 
     /**
-     * Query all items
+     * Get all items
+     * Filter for supplierId and productId is available
+     * @param supplierId
+     * @param productId
      * @return
      */
     @ApiOperation(value = "Get all items")
@@ -106,7 +109,7 @@ public class ItemController {
     public List<Item> selectAllItems(@RequestParam(value = "supplierId", required = false) String supplierId,
                                      @RequestParam(value = "productId", required = false) String productId) {
         if (supplierId != null && productId != null){
-            throw new ApiRequestException("Error", HttpStatus.BAD_REQUEST);
+            throw new ApiRequestException("You can't pass supplierId and productId both in a request.", HttpStatus.BAD_REQUEST);
         }
         if (supplierId != null) {
             Supplier supplier = supplierService.selectSupplierByID(supplierId);
@@ -114,12 +117,12 @@ public class ItemController {
                 throw new ApiRequestException("Supplier not exist", HttpStatus.BAD_REQUEST);
             }
             return itemService.selectItemBySupplierId(supplierId);
-        }else if (productId != null){
+        } else if (productId != null){
                 Product product  = productService.selectProductByID(productId);
                 if (product == null){
                     throw new ApiRequestException("Product not exist", HttpStatus.BAD_REQUEST);
                 }
-                return  itemService.selectItemByProductId(productId);
+                return itemService.selectItemByProductId(productId);
         }
         return itemService.selectAllItems();
     }
