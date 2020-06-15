@@ -22,7 +22,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping(value = "/api/product")
+@RequestMapping(value = "/api/products")
 public class ProductController {
 
     @Autowired

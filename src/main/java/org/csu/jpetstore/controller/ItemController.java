@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/api/item")
+@RequestMapping(value = "/api/items")
 public class ItemController {
     @Autowired
     private ItemService itemService;
@@ -114,7 +114,7 @@ public class ItemController {
      * Query all items
      * @return
      */
-    @ApiOperation(value = "Get all items", authorizations = {@Authorization(value = "Bearer")})
+    @ApiOperation(value = "Get all items")
     @RequestMapping(method = RequestMethod.GET, value = "/all")
     public List<Item> selectAllItems() {
         return itemService.selectAllItems();
