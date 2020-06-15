@@ -103,24 +103,27 @@ public class ItemController {
      */
     @ApiOperation(value = "Get all items")
     @RequestMapping(method = RequestMethod.GET, value = "/all")
-    public List<Item> selectAllItems() {
+    public List<Item> selectAllItems(@RequestParam(value = "supplierId", required = false) String supplierId,
+                                     @RequestParam(value = "productId", required = false) String productId) {
+        if (supplierId != null && productId != null){
+            throw new ApiRequestException("Error", HttpStatus.BAD_REQUEST);
+        }
+        if (supplierId != null) {
+            Supplier supplier = supplierService.selectSupplierByID(supplierId);
+            if (supplier == null) {
+                throw new ApiRequestException("Supplier not exist", HttpStatus.BAD_REQUEST);
+            }
+            return itemService.selectItemBySupplierId(supplierId);
+        }else if (productId != null){
+                Product product  = productService.selectProductByID(productId);
+                if (product == null){
+                    throw new ApiRequestException("Product not exist", HttpStatus.BAD_REQUEST);
+                }
+                return  itemService.selectItemByProductId(productId);
+        }
         return itemService.selectAllItems();
     }
 
-    /**findItemBySuppplierid*/
-    @ApiOperation(value = "find item by supplierid")
-    @RequestMapping(method = RequestMethod.GET, value = "/all?supplier={supplierId}")
-    public List<Item> findItemBySupplierId(@PathVariable String supplierId) {
-        System.out.println(supplierId);
-        return itemService.selectItemBySupplierId(supplierId);
-    }
-
-    /**findItemByProductid*/
-    @ApiOperation(value = "find item by prodcutid")
-    @RequestMapping(method = RequestMethod.GET, value = "/all?product={productId}")
-    public List<Item> findItemByProductId(@PathVariable String productId) {
-        return itemService.selectItemByProductId(productId);
-    }
 
     /**deleteItem*/
     @ApiOperation(value = "Delete item", authorizations = {@Authorization(value = "Bearer")})
