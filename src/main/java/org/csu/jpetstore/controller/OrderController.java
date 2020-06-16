@@ -21,7 +21,9 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -168,7 +170,7 @@ public class OrderController {
     @RequestMapping(method = RequestMethod.GET, value = "/{orderId}")
     @PreAuthorize("isAuthenticated()")
     public Order getOrderById(@ApiIgnore Authentication auth, @PathVariable String orderId) {
-        Order order = orderService.getOrderById(orderId);
+        Order order = orderService.selectOrderByID(orderId);
         if (order == null) {
             throw new ApiRequestException("Order not exist!", HttpStatus.BAD_REQUEST);
         }
@@ -191,6 +193,115 @@ public class OrderController {
             }
         } else {
             return order;
+        }
+    }
+
+    /**
+     * Update order status
+     * @param auth
+     * @param orderId
+     * @param param
+     * @return
+     */
+    @ApiOperation(value = "Update order's status", authorizations = {@Authorization(value = "Bearer")})
+    @RequestMapping(value = "/{orderId}", method = RequestMethod.PATCH)
+    @PreAuthorize("isAuthenticated()")
+    public Map updateOrderStatus(@ApiIgnore Authentication auth, @PathVariable String orderId, @RequestBody Map<String, String> param) {
+        Map response = new HashMap();
+        Order order = orderService.selectOrderByID(orderId);
+        if (order == null) {
+            throw new ApiRequestException("Order not exist!", HttpStatus.BAD_REQUEST);
+        } else {
+            if (auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))) {
+                if (order.getUserId().toString().equals(auth.getName())) {
+                    String status = param.get("status");
+                    if (!status.equals("Cancel")) {
+                        throw new ApiRequestException("You can only change your order's status to \"Cancel\"", HttpStatus.FORBIDDEN);
+                    } else {
+                        if (!order.getStatus().equals("Pending")) {
+                            throw new ApiRequestException("You can't change the order's status anymore.", HttpStatus.FORBIDDEN);
+                        } else {
+                            this.cancelOrder(orderId);
+                            orderService.updateOrderStatus(status, orderId);
+                            response.put("error", false);
+                            response.put("message", "Order " + orderId + " status has been changed to " + status);
+                            response.put("id", orderId);
+                            return response;
+                        }
+                    }
+                } else {
+                    throw new ApiRequestException("You can't change other user's order status", HttpStatus.FORBIDDEN);
+                }
+            } else if (auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_SELLER"))) {
+                Supplier supplier = supplierService.selectSupplierByID(order.getSupplierId().toString());
+                if (supplier.getUserid().toString().equals(auth.getName())) {
+                    String status = param.get("status");
+                    if (!(status.equals("Cancel") || status.equals("Active"))) {
+                        throw new ApiRequestException("You can only change your order's status to \"Cancel\" or \"Active\"", HttpStatus.BAD_REQUEST);
+                    } else {
+                        if (order.getStatus().equals("Active")) {
+                            throw new ApiRequestException("The order's status is Active, you can't change it anymore", HttpStatus.FORBIDDEN);
+                        } else {
+                            if (status.equals("Cancel")) {
+                                this.cancelOrder(orderId);
+                            }
+                            orderService.updateOrderStatus(status, orderId);
+                            response.put("error", false);
+                            response.put("message", "Order " + orderId + " status has been changed to " + status);
+                            response.put("id", orderId);
+                            return response;
+                        }
+                    }
+                } else {
+                    throw new ApiRequestException("You can only change order's status in your supplier.", HttpStatus.FORBIDDEN);
+                }
+            } else {
+                String status = param.get("status");
+                if (!(status.equals("Cancel") || status.equals("Active") || status.equals("Pending"))) {
+                    throw new ApiRequestException("You can only change your order's status to \"Cancel\" or \"Pending\" or \"Active\"", HttpStatus.BAD_REQUEST);
+                } else {
+                    if (order.getStatus().equals("Cancel") && !status.equals("Cancel")) {
+                        if (!this.restoreOrder(orderId)) {
+                            throw new ApiRequestException("Stock quantity is not enough to restore order.", HttpStatus.BAD_REQUEST);
+                        }
+                    } else if (!order.getStatus().equals("Cancel") && status.equals("Cancel")) {
+                        this.cancelOrder(orderId);
+                    }
+                    orderService.updateOrderStatus(status, orderId);
+                    response.put("error", false);
+                    response.put("message", "Order " + orderId + " status has been changed to " + status);
+                    response.put("id", orderId);
+                    return response;
+                }
+            }
+        }
+    }
+
+    /**
+     * if order's status is Active or Pending, and to be changed into Cancel, the method will add order's quantity to item's quantity
+     * @param orderId
+     */
+    private void cancelOrder(String orderId) {
+        Order order = orderService.selectOrderByID(orderId);
+        Item item = itemService.selectItemByID(order.getItemId().toString());
+        item.setQuantity(item.getQuantity()+order.getQuantity());
+        itemService.updateItem(item);
+    }
+
+    /**
+     * if order's status is Cancel, and to be changed into Pending or Active, the method will subtract order's quantity from item's quantity
+     * @param orderId
+     * @return
+     */
+    private Boolean restoreOrder(String orderId) {
+        Order order = orderService.selectOrderByID(orderId);
+        Item item = itemService.selectItemByID(order.getItemId().toString());
+        if (item.getQuantity() >= order.getQuantity()) {
+            item.setQuantity(item.getQuantity()-order.getQuantity());
+            itemService.updateItem(item);
+            return true;
+        } else {
+            return false;
         }
     }
 }

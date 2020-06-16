@@ -35,10 +35,6 @@ public class OrderService {
         return orderDao.findOrdersByProductId(productId);
     }
 
-    public Order getOrderById(String id) {
-        return orderDao.findOrderByID(id);
-    }
-
     public void insertOrder(Order order) {
         Integer id;
         do {
@@ -48,8 +44,8 @@ public class OrderService {
         orderDao.insertOrder(order);
     }
 
-    public void updateOrder(Order order) {
-        orderDao.updateOrder(order);
+    public void updateOrderStatus(String status, String id) {
+        orderDao.updateOrderStatus(status, id);
     }
 
     public void deleteOrder(String id) {
