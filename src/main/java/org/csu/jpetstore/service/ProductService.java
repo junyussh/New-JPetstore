@@ -29,6 +29,15 @@ public class ProductService {
     public List<Product> selectAllProducts() {
         return productDao.selectAllProducts();
     }
+
+    public List<Product> selectProductsByCategoryId(String categoryId) {
+        return productDao.findAllProductByCategoryId(categoryId);
+    }
+
+    public List<Product> selectProductsByCategoryAndSupplier(String categoryId, String supplierId) {
+        return productDao.findAllProductsByCategoryAndSupplier(categoryId, supplierId);
+    }
+
     public List<Product> getProductListBySupplierId(String supplierId) {
         return productDao.getProductListBySupplierId(supplierId);
     }

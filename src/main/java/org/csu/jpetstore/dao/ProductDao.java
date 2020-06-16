@@ -25,6 +25,9 @@ public interface ProductDao {
     @Select("SELECT * FROM Product where categoryId = #{id}")
     List<Product> findAllProductByCategoryId(@Param("id") String id);
 
+    @Select("SELECT * FROM Product where categoryId = #{categoryId} and supplierId = #{supplierId}")
+    List<Product> findAllProductsByCategoryAndSupplier(@Param("categoryId") String categoryId, @Param("supplierId") String supplierId);
+
     @Insert("INSERT into Product (id, supplierId, categoryId, name, description, image) VALUES(#{id}, #{supplierId}, ${categoryId}, #{name}, #{description}, #{image})")
     void insertProduct(Product product);
 

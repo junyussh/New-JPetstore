@@ -2,10 +2,12 @@ package org.csu.jpetstore.controller;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
+import org.csu.jpetstore.bean.Category;
 import org.csu.jpetstore.bean.Product;
 import org.csu.jpetstore.bean.Supplier;
 import org.csu.jpetstore.exception.ApiRequestException;
 import org.csu.jpetstore.service.AccountService;
+import org.csu.jpetstore.service.CategoryService;
 import org.csu.jpetstore.service.ProductService;
 import org.csu.jpetstore.service.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +36,8 @@ public class ProductController {
     @Autowired
     private SupplierService supplierService;
 
-
-
+    @Autowired
+    private CategoryService categoryService;
 
     /**
      * Query product by ID
@@ -78,15 +80,32 @@ public class ProductController {
      */
     @ApiOperation(value = "Query all product in database")
     @RequestMapping(method = RequestMethod.GET, value = "/all")
-    public List<Product> getAllProducts(@RequestParam(value = "supplierId", required = false) String supplierId) {
-        if (supplierId != null) {
+    public List<Product> getAllProducts(@RequestParam(value = "supplierId", required = false) String supplierId, @RequestParam(value = "categoryId", required = false) String categoryId) {
+        if (supplierId != null && categoryId != null) {
             Supplier supplier = supplierService.selectSupplierByID(supplierId);
             if (supplier == null) {
-                throw new ApiRequestException("Supplier not exist", HttpStatus.BAD_REQUEST);
+                throw new ApiRequestException("Supplier not exist!", HttpStatus.BAD_REQUEST);
+            }
+            Category category = categoryService.selectCategoryByID(categoryId);
+            if (category == null) {
+                throw new ApiRequestException("Category not found!", HttpStatus.BAD_REQUEST);
+            }
+            return productService.selectProductsByCategoryAndSupplier(categoryId, supplierId);
+        } else if (supplierId != null) {
+            Supplier supplier = supplierService.selectSupplierByID(supplierId);
+            if (supplier == null) {
+                throw new ApiRequestException("Supplier not exist!", HttpStatus.BAD_REQUEST);
             }
             return productService.getProductListBySupplierId(supplierId);
+        } else if (categoryId != null) {
+            Category category = categoryService.selectCategoryByID(categoryId);
+            if (category == null) {
+                throw new ApiRequestException("Category not found!", HttpStatus.BAD_REQUEST);
+            }
+            return productService.selectProductsByCategoryId(categoryId);
+        } else {
+            return productService.selectAllProducts();
         }
-        return productService.selectAllProducts();
     }
 
 
