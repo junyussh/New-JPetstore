@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -108,13 +109,33 @@ public class OrderController {
      * @param orderId
      * @return
      */
-    @ApiOperation(value = "Query order by ID")
+    @ApiOperation(value = "Query order by ID", authorizations = {@Authorization(value = "Bearer")})
     @RequestMapping(method = RequestMethod.GET, value = "/{orderId}")
-    public Order getOrderById(@PathVariable String orderId) {
+    @PreAuthorize("isAuthenticated()")
+    public Order getOrderById(@ApiIgnore Authentication auth, @PathVariable String orderId) {
         Order order = orderService.getOrderById(orderId);
         if (order == null) {
             throw new ApiRequestException("Order not exist!", HttpStatus.BAD_REQUEST);
         }
-        return order;
+        if (auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))) {
+            if (order.getUserId().equals(auth.getName())) {
+                return order;
+            } else {
+                throw new ApiRequestException("You don't have permission to view this order", HttpStatus.FORBIDDEN);
+            }
+        }
+        else if (auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_SELLER"))) {
+            if (order.getUserId().equals(auth.getName())) {
+                return order;
+            }
+            Supplier supplier = supplierService.selectSupplierByID(order.getSupplierId().toString());
+            if (supplier.getUserid().toString().equals(auth.getName())) {
+                return order;
+            } else {
+                throw new ApiRequestException("You don't have permission to view this order", HttpStatus.FORBIDDEN);
+            }
+        } else {
+            return order;
+        }
     }
 }
