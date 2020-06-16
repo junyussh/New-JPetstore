@@ -32,7 +32,7 @@ public class OrderService {
     }
 
     public List<Order> selectOrdersByProductId(String productId) {
-        return orderDao.findOrdersBySupplierId(productId);
+        return orderDao.findOrdersByProductId(productId);
     }
 
     public Order getOrderById(String id) {

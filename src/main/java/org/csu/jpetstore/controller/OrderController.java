@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -92,20 +93,74 @@ public class OrderController {
     }
 
     /**
-     * Query all orders
-     *
+     * Query all orders by supplierId or productId
+     * Note: this method is only available for SELLER and ADMIN
+     * @param auth
+     * @param supplierId
+     * @param productId
      * @return
      */
-    @ApiOperation(value = "Query all orders(Admin)", authorizations = {@Authorization(value = "Bearer")})
+    @ApiOperation(value = "Query all orders(Admin, Seller)", authorizations = {@Authorization(value = "Bearer")})
     @RequestMapping(value = "/all", method = RequestMethod.GET)
-    @PreAuthorize("isAuthenticated() and hasRole('ADMIN')")
-    public List<Order> getAllOrders() {
-        return orderService.selectAllOrders();
+    @PreAuthorize("isAuthenticated() and hasAnyRole('ADMIN', 'SELLER')")
+    public List<Order> getAllOrders(@ApiIgnore Authentication auth, @RequestParam(value = "supplierId", required = false) String supplierId, @RequestParam(value = "productId", required = false) String productId) {
+        if (supplierId != null && productId != null) {
+            throw new ApiRequestException("SupplierId and ProductId cannot both in URL param");
+        }
+        if (auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+            if (supplierId != null) {
+                Supplier supplier = supplierService.selectSupplierByID(supplierId);
+                if (supplier == null) {
+                    throw new ApiRequestException("Supplier not exist!", HttpStatus.BAD_REQUEST);
+                } else {
+                    return orderService.selectOrdersBySupplierId(supplierId);
+                }
+            } else if (productId != null) {
+                Product product = productService.selectProductByID(productId);
+                if (product == null) {
+                    throw new ApiRequestException("Product not exist!", HttpStatus.BAD_REQUEST);
+                } else {
+                    return orderService.selectOrdersByProductId(productId);
+                }
+            }
+            return orderService.selectAllOrders();
+        } else {
+            if (supplierId != null) {
+                Supplier supplier = supplierService.selectSupplierByID(supplierId);
+                if (supplier == null) {
+                    throw new ApiRequestException("Supplier not exist!", HttpStatus.BAD_REQUEST);
+                } else if (supplier.getUserid().toString().equals(auth.getName())) {
+                    return orderService.selectOrdersBySupplierId(supplierId);
+                } else {
+                    throw new ApiRequestException("You can only view your supplier's orders.", HttpStatus.FORBIDDEN);
+                }
+            } else if (productId != null) {
+                Product product = productService.selectProductByID(productId);
+                if (product == null) {
+                    throw new ApiRequestException("Product not exist!", HttpStatus.BAD_REQUEST);
+                } else {
+                    Supplier supplier = supplierService.selectSupplierByID(product.getSupplierId().toString());
+                    if (supplier.getUserid().toString().equals(auth.getName())) {
+                        return orderService.selectOrdersByProductId(productId);
+                    } else {
+                        throw new ApiRequestException("You can only view your product's orders.", HttpStatus.FORBIDDEN);
+                    }
+                }
+            } else {
+                List<Supplier> suppliers = supplierService.selectSupplierByUserId(auth.getName());
+                List<Order> allOrderList = new ArrayList<>();
+                for (Supplier supplier : suppliers) {
+                    allOrderList.addAll(orderService.selectOrdersBySupplierId(supplier.getId().toString()));
+                }
+                return allOrderList;
+            }
+        }
     }
 
     /**
      * Query order by id
      *
+     * @param auth
      * @param orderId
      * @return
      */
