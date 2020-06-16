@@ -59,23 +59,14 @@ public class AccountController {
     @ApiOperation(value = "Get all account", authorizations = {@Authorization(value = "Bearer")})
     @RequestMapping(method = RequestMethod.GET, value = "/")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public List<Account> getAllUsers() {
-        return accountService.selectAllAccount();
-    }
-
-
-    /**
-     * 管理员 获取特定的role的所有账户
-     *
-     * @param role
-     * @return
-     */
-    @ApiOperation(value = "Get account by specific role", authorizations = {@Authorization(value = "Bearer")})
-    @RequestMapping(method = RequestMethod.GET, value = "/{role}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public List<Account> getAccountByRole(@PathVariable String role) {
+    public List<Account> getAllUsers(@RequestParam(value = "/users?role={role}", required = false) String role1,
+                                     @RequestParam(value = "role", required = false) String role) {
+        if (role != null){
         return accountService.selectAccountByRole(role);
     }
+        return accountService.selectAllAccount();
+    }
+    
 
 
     /**
