@@ -59,33 +59,35 @@ public class AccountController {
     @ApiOperation(value = "Get all account", authorizations = {@Authorization(value = "Bearer")})
     @RequestMapping(method = RequestMethod.GET, value = "/")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public List<Account> getAllUsers(@RequestParam(value = "/users?role={role}", required = false) String role1,
-                                     @RequestParam(value = "role", required = false) String role) {
-        if (role != null){
-        return accountService.selectAccountByRole(role);
-    }
+    public List<Account> getAllUsers(@RequestParam(value = "role", required = false) String role) {
+        if (role != null) {
+            return accountService.selectAccountByRole(role);
+        }
         return accountService.selectAllAccount();
     }
-    
-
 
     /**
      * 管理员 更新用户信息
      *
      * @param account
-     * @param accountid
+     * @param accountId
      */
     @ApiOperation(value = "Update account info", authorizations = {@Authorization(value = "Bearer")})
-    @RequestMapping(method = RequestMethod.PUT, value = "/{accountid}")
+    @RequestMapping(method = RequestMethod.PUT, value = "/{accountId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public Map updateAccount(@RequestBody Account account, @PathVariable String accountid) {
-        account.setId(Integer.valueOf(accountid));
-        accountService.updateAccountInfo(account);
-        // exception
-        Map data = new HashMap();
-        data.put("message", "Account updated success");
-        data.put("id", accountid);
-        data.put("error", false);
-        return data;
+    public Map updateAccount(@RequestBody Account account, @PathVariable String accountId) {
+        account.setId(Integer.valueOf(accountId));
+        Account account1 = accountService.selectAccountByID(accountId);
+        if(account1 == null) {
+            throw new ApiRequestException("User id not exist!", HttpStatus.BAD_REQUEST);
+        } else {
+            accountService.updateAccountInfo(account);
+            // exception
+            Map data = new HashMap();
+            data.put("message", "Account updated success");
+            data.put("id", accountId);
+            data.put("error", false);
+            return data;
+        }
     }
 }
