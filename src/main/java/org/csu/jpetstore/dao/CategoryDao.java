@@ -44,5 +44,6 @@ public interface CategoryDao {
     @Delete("DELETE FROM Category WHERE name=#{name}")
     void deleteCategory(@Param("name") String name);
 
-
+    @Delete("DELETE FROM Category WHERE id=#{id}")
+    void deleteCategoryByID(@Param("id") String id);
 }

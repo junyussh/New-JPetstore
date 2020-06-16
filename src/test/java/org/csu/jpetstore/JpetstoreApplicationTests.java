@@ -114,7 +114,7 @@ class JpetstoreApplicationTests {
         String id = String.format("%010d", new BigInteger(UUID.randomUUID().toString().replace("-", ""), 16)).substring(0, 8);
         Integer _id = Integer.valueOf(id);
         Category newCategory = new Category();
-        newCategory.setCategoryId(_id);
+        newCategory.setId(_id);
         newCategory.setName("DOG");
         categoryService.insertCategory(newCategory);
     }

@@ -6,11 +6,9 @@ import org.csu.jpetstore.exception.ApiRequestException;
 import org.csu.jpetstore.util.IDGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 @Service
 public class CategoryService {
@@ -18,8 +16,6 @@ public class CategoryService {
     private CategoryDao categoryDao;
     @Autowired
     private IDGenerator idGenerator;
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     /*
      two way to get Category
@@ -32,6 +28,10 @@ public class CategoryService {
         return categoryDao.findCategoryByName(name);
     }
 
+    public List<Category> selectAllCategory() {
+        return categoryDao.findAllCategory();
+    }
+
     /**
      * insert new Category
      * first step: find by id
@@ -39,7 +39,7 @@ public class CategoryService {
      *
      * @param category
      */
-    public Map insertCategory(Category category) {
+    public void insertCategory(Category category) {
         Integer id;
         do {
             id = idGenerator.getID();
@@ -47,14 +47,8 @@ public class CategoryService {
         if (categoryDao.findCategoryByName(category.getName()) != null){
             throw new ApiRequestException("Supplier not exist!", HttpStatus.BAD_REQUEST);
         }
-        category.setCategoryId(id);
+        category.setId(id);
         categoryDao.insertCategory(category);
-        Map data = new HashMap();
-        data.put("error", false);
-        data.put("message", "Insert category success.");
-        data.put("id", category.getCategoryId());
-        data.put("data", category);
-        return data;
     }
 
     /**
@@ -66,6 +60,9 @@ public class CategoryService {
         categoryDao.deleteCategory(name);
     }
 
+    public void deleteCategoryByID(String id) {
+        categoryDao.deleteCategoryByID(id);
+    }
     /**
      * update name
      * @param newName

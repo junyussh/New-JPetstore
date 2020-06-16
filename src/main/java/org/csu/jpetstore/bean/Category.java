@@ -2,12 +2,14 @@ package org.csu.jpetstore.bean;
 
 public class Category {
     private Integer id;
+    private String name;
+    private String description;
 
-    public Integer getCategoryId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setCategoryId(Integer id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -27,6 +29,4 @@ public class Category {
         this.description = description;
     }
 
-    private String name;
-    private String description;
 }
