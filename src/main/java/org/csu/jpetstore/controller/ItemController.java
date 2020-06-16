@@ -127,6 +127,21 @@ public class ItemController {
         return itemService.selectAllItems();
     }
 
+    /**
+     * Get item by id
+     * @param id
+     * @return
+     */
+    @ApiOperation(value = "Query item by id")
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
+    public Item getItemByID(@PathVariable String id) {
+        Item item = itemService.selectItemByID(id);
+        if (item == null) {
+            throw new ApiRequestException("Item not exist!", HttpStatus.BAD_REQUEST);
+        }
+        return item;
+    }
+
 
     /**deleteItem*/
     @ApiOperation(value = "Delete item", authorizations = {@Authorization(value = "Bearer")})

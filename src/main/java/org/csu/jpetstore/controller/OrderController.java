@@ -15,10 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.sql.Timestamp;
@@ -38,6 +35,7 @@ public class OrderController {
 
     /**
      * Create new order
+     *
      * @param auth
      * @param param
      * @return
@@ -52,7 +50,7 @@ public class OrderController {
             throw new ApiRequestException("Item not exist!", HttpStatus.BAD_REQUEST);
         } else {
             if (param.getQuantity() > item.getQuantity()) {
-                throw new ApiRequestException("Current stock quantity is "+item.getQuantity()+", you can't order more quantity than stock's", HttpStatus.BAD_REQUEST);
+                throw new ApiRequestException("Current stock quantity is " + item.getQuantity() + ", you can't order more quantity than stock's", HttpStatus.BAD_REQUEST);
             }
             param.setProductId(item.getProductId());
             param.setSupplierId(item.getSupplierId());
@@ -73,7 +71,7 @@ public class OrderController {
             orderService.insertOrder(param);
 
             // update item stock quantity
-            item.setQuantity(item.getQuantity()-param.getQuantity());
+            item.setQuantity(item.getQuantity() - param.getQuantity());
             itemService.updateItem(item);
         }
         return param;
@@ -81,6 +79,7 @@ public class OrderController {
 
     /**
      * Fetch all orders that user order
+     *
      * @param auth
      * @return
      */
@@ -93,6 +92,7 @@ public class OrderController {
 
     /**
      * Query all orders
+     *
      * @return
      */
     @ApiOperation(value = "Query all orders(Admin)", authorizations = {@Authorization(value = "Bearer")})
@@ -100,5 +100,21 @@ public class OrderController {
     @PreAuthorize("isAuthenticated() and hasRole('ADMIN')")
     public List<Order> getAllOrders() {
         return orderService.selectAllOrders();
+    }
+
+    /**
+     * Query order by id
+     *
+     * @param orderId
+     * @return
+     */
+    @ApiOperation(value = "Query order by ID")
+    @RequestMapping(method = RequestMethod.GET, value = "/{orderId}")
+    public Order getOrderById(@PathVariable String orderId) {
+        Order order = orderService.getOrderById(orderId);
+        if (order == null) {
+            throw new ApiRequestException("Order not exist!", HttpStatus.BAD_REQUEST);
+        }
+        return order;
     }
 }
