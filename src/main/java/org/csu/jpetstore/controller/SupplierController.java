@@ -3,9 +3,13 @@ package org.csu.jpetstore.controller;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.csu.jpetstore.bean.Account;
+import org.csu.jpetstore.bean.Item;
+import org.csu.jpetstore.bean.Product;
 import org.csu.jpetstore.bean.Supplier;
 import org.csu.jpetstore.exception.ApiRequestException;
 import org.csu.jpetstore.service.AccountService;
+import org.csu.jpetstore.service.ItemService;
+import org.csu.jpetstore.service.ProductService;
 import org.csu.jpetstore.service.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +30,11 @@ public class SupplierController {
     private SupplierService supplierService;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private ProductService productService;
+    @Autowired
+    private ItemService itemService;
+
 
     /**
      * Query all supplier
@@ -133,7 +142,24 @@ public class SupplierController {
         if (supplierService.selectSupplierByID(supplierid) == null) {
             throw new ApiRequestException("Supplier not exist!", HttpStatus.BAD_REQUEST);
         }
-        supplierService.deleteSupplier(supplierid);
+
+
+        // 删除子树所有分支
+        if (productService.getProductListBySupplierId(supplierid) != null){
+            for (Product product : productService.getProductListBySupplierId(supplierid)){
+                if (itemService.selectItemByProductId(String.valueOf(product.getId())) != null) {
+                    for (Item item : itemService.selectItemByProductId(String.valueOf(product.getId())))
+                        itemService.deleteItem(String.valueOf(item.getId()));
+                    productService.deleteProduct(String.valueOf(product.getId()));
+                }
+                else
+                    productService.deleteProduct(String.valueOf(product.getId()));
+            }
+            supplierService.deleteSupplier(supplierid);
+        }
+        else
+            supplierService.deleteSupplier(supplierid);
+
         // if user has no supplier, change his role to user
         if (supplierService.selectSupplierByUserId(userid).size()== 0) {
             accountService.updateAccountRole(auth.getName(), "USER");
