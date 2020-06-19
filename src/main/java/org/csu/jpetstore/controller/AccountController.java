@@ -13,9 +13,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/users")
@@ -72,15 +71,16 @@ public class AccountController {
      * @param account
      * @param accountId
      */
-    @ApiOperation(value = "Update account info", authorizations = {@Authorization(value = "Bearer")})
+    @ApiOperation(value = "Update account info(Admin)", authorizations = {@Authorization(value = "Bearer")})
     @RequestMapping(method = RequestMethod.PUT, value = "/{accountId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public Map updateAccount(@RequestBody Account account, @PathVariable String accountId) {
+    public Map updateAccountByID(@RequestBody Account account, @PathVariable String accountId) {
         account.setId(Integer.valueOf(accountId));
         Account account1 = accountService.selectAccountByID(accountId);
         if(account1 == null) {
             throw new ApiRequestException("User id not exist!", HttpStatus.BAD_REQUEST);
         } else {
+            account.setId(Integer.parseInt(accountId));
             accountService.updateAccountInfo(account);
             // exception
             Map data = new HashMap();
@@ -89,5 +89,19 @@ public class AccountController {
             data.put("error", false);
             return data;
         }
+    }
+
+    @ApiOperation(value = "Update account info", authorizations = {@Authorization(value = "Bearer")})
+    @RequestMapping(value = "/me", method = RequestMethod.PUT)
+    @PreAuthorize("isAuthenticated()")
+    public Account updateAccount(@ApiIgnore Authentication auth, @RequestBody Account account) {
+        String userId = auth.getName();
+        account.setId(Integer.parseInt(userId));
+        Set<String> roles = auth.getAuthorities().stream()
+                .map(r -> r.getAuthority()).collect(Collectors.toSet());
+        Iterator role = roles.iterator();
+        account.setRole((String) role.next());
+        accountService.updateAccountInfo(account);
+        return account;
     }
 }

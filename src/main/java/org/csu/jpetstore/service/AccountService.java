@@ -70,6 +70,7 @@ public class AccountService {
     }
 
     public void updateAccountInfo(Account account) {
+        account.setPassword(bCryptPasswordEncoder.encode(account.getPassword()));
         accountDao.updateAccountInfo(account);
     }
 
