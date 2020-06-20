@@ -14,7 +14,7 @@ public interface ItemDao {
             "VALUES(#{id}, #{productId}, #{supplierId}, #{unitprice}, #{unitcost}, #{quantity}, #{attribute})")
     void insertItem(Item item);
 
-    @Update("UPDATE Item SET quantity=#{quantity}, unitprice=#{unitprice}, unitcost=#{unitcost}, attribute=#{attribute}")
+    @Update("UPDATE Item SET quantity=#{quantity}, unitprice=#{unitprice}, unitcost=#{unitcost}, attribute=#{attribute} WHERE id=#{id}")
     void updateItem(Item item);
 
     @Select("select * from Item where productId = #{productId}")
