@@ -69,7 +69,7 @@ class JpetstoreApplicationTests {
         Account account = accountService.selectAccountByUsername("test");
         account.setAddress1("Beitou");
         account.setAddress2("Taipei1");
-        accountService.updateAccountInfo(account);
+        accountService.updateAccountInfo(account, account);
     }
 
     @Test

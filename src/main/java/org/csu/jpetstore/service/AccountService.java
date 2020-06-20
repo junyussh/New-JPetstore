@@ -69,8 +69,12 @@ public class AccountService {
         accountDao.insertAccount(account);
     }
 
-    public void updateAccountInfo(Account account) {
-        account.setPassword(bCryptPasswordEncoder.encode(account.getPassword()));
+    public void updateAccountInfo(Account account, Account origin) {
+        if (!account.getPassword().isEmpty() || account.getPassword() == null) {
+            account.setPassword(bCryptPasswordEncoder.encode(account.getPassword()));
+        } else {
+            account.setPassword(origin.getPassword());
+        }
         accountDao.updateAccountInfo(account);
     }
 

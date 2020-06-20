@@ -81,7 +81,7 @@ public class AccountController {
             throw new ApiRequestException("User id not exist!", HttpStatus.BAD_REQUEST);
         } else {
             account.setId(Integer.parseInt(accountId));
-            accountService.updateAccountInfo(account);
+            accountService.updateAccountInfo(account, account1);
             // exception
             Map data = new HashMap();
             data.put("message", "Account updated success");
@@ -101,7 +101,8 @@ public class AccountController {
                 .map(r -> r.getAuthority()).collect(Collectors.toSet());
         Iterator role = roles.iterator();
         account.setRole((String) role.next());
-        accountService.updateAccountInfo(account);
+        Account account1 = accountService.selectAccountByID(auth.getName());
+        accountService.updateAccountInfo(account, account1);
         return account;
     }
 }
